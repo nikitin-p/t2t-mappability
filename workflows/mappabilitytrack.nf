@@ -1,5 +1,6 @@
-include { FASTQC } from '../modules/nf-core/modules/fastqc/main.nf'
-include { READ_NAMES } from '../modules/local/read_names/main.nf'
+include { DOWNLOADGENOME } from '../modules/nf-core/modules/local/downloadgenome.nf'
+include { UNIQMAPTRACK } from '../modules/nf-core/modules/local/uniqmaptrack.nf'
+include { PARSETRACK } from '../modules/nf-core/modules/local/parsetrack.nf'
 
 reads = [
     [
