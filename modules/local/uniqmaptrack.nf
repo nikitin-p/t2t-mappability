@@ -3,7 +3,7 @@ process UNIQMAPTRACK {
     label 'process_high'
     
     conda (params.enable_conda ? "YOUR-TOOL-HERE" : null)
-    container 'sviatsidorov/uniqmaptrack'
+    container 'sviatsidorov/uniqmaptrack:1.1'
 
     input:
     tuple val(meta), path(bam)
