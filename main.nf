@@ -2,8 +2,8 @@
 
 nextflow.enable.dsl = 2
 
-include { NF_EXAMPLE } from './workflows/example_wf.nf'
+include { MAPPABILITY } from './workflows/mappability.nf'
 
 workflow {
-    NF_EXAMPLE()
+    MAPPABILITY()
 }

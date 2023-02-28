@@ -18,7 +18,7 @@ include { BIGBEDTOBED } from '../modules/nf-core/modules/local/bigbedtobed.nf'
 //     .map{ row -> file(row[0]) }
 //     .set{ ch_wigs }
 
-workflow NF_EXAMPLE {
+workflow MAPPABILITY {
     DOWNLOADANNOTATION(  )
 
     BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
