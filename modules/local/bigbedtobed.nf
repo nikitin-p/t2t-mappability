@@ -11,7 +11,7 @@ process BIGBEDTOBED {
     path "versions.yml"           , emit: versions
 
     """
-    /minUniqueKmer/bigBedToBed ${bigbed} cenSatAnnotation.tmp
+    /bigBedToBed ${bigbed} cenSatAnnotation.tmp
 
     awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1] }}' cenSatAnnotation.tmp > cenSatAnnotation.bed
 
