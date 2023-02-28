@@ -1,8 +1,8 @@
-include { DOWNLOADANNOTATION } from '../modules/nf-core/modules/local/downloadannotation.nf'
-include { BIGBEDTOBED } from '../modules/nf-core/modules/local/bigbedtobed.nf'
-// include { PYSCRIPTS } from '../modules/nf-core/modules/local/pyscripts.nf'
-// include { BEDTOOLS } from '../modules/nf-core/modules/local/bedtools.nf'
-// include { RPLOTS } from '../modules/nf-core/modules/local/rplots.nf'
+include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
+include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
+// include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
+// include { BEDTOOLS } from '../modules/local/bedtools.nf'
+// include { RPLOTS } from '../modules/local/rplots.nf'
 
 // wigs = [
 //     [
