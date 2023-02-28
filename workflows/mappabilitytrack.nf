@@ -21,7 +21,7 @@ include { BIGBEDTOBED } from '../modules/nf-core/modules/local/bigbedtobed.nf'
 workflow NF_EXAMPLE {
     DOWNLOADANNOTATION(  )
 
-    BIGBEDTOBED(  )
+    BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
     // PYSCRIPTS(  )
 

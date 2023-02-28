@@ -4,7 +4,7 @@ process DOWNLOADANNOTATION {
     container 'sviatsidorov/uniqmaptrack:1.1'
 
     output:
-    path "cenSatAnnotation.bigBed", emit: t2t
+    path "cenSatAnnotation.bigBed", emit: censat
     path "versions.yml"           , emit: versions
 
     """
