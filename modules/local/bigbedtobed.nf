@@ -11,8 +11,10 @@ process BIGBEDTOBED {
     path "versions.yml"           , emit: versions
 
     """
-    ./bigBedToBed ${bigbed} cenSatAnnotation.tmp
-    awk 'BEGIN{{ OFS="\t" }}{{ split($4,A,"_"); print $1,$2,$3,A[1] }}' cenSatAnnotation.tmp > cenSatAnnotation.bed
+    bigBedToBed ${bigbed} cenSatAnnotation.tmp
+    awk 'BEGIN{{ OFS="\t" }}{{ split($4,A,"_"); print $1,$2,$3,A[1] }}' \
+        cenSatAnnotation.tmp > cenSatAnnotation.bed
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
