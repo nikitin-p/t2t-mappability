@@ -1,29 +1,31 @@
-include { DOWNLOADGENOME } from '../modules/nf-core/modules/local/downloadgenome.nf'
-include { UNIQMAPTRACK } from '../modules/nf-core/modules/local/uniqmaptrack.nf'
-include { PARSETRACK } from '../modules/nf-core/modules/local/parsetrack.nf'
+include { DOWNLOADANNOTATION } from '../modules/nf-core/modules/local/downloadannotation.nf'
+include { BIGBEDTOBED } from '../modules/nf-core/modules/local/bigbedtobed.nf'
+include { PYSCRIPTS } from '../modules/nf-core/modules/local/pyscripts.nf'
+include { BEDTOOLS } from '../modules/nf-core/modules/local/bedtools.nf'
+include { RPLOTS } from '../modules/nf-core/modules/local/rplots.nf'
 
-reads = [
-    [
-        [
-            id: "testx"
-        ],
-        "https://github.com/hartwigmedical/testdata/raw/master/100k_reads_hiseq/TESTX/TESTX_H7YRLADXX_S1_L001_R1_001.fastq.gz"
-    ],
-    [
-        [
-            id: "testy"
-        ],
-        "https://github.com/hartwigmedical/testdata/raw/master/100k_reads_hiseq/TESTY/TESTY_H7YRLADXX_S1_L001_R1_001.fastq.gz"
-    ]
-]
+// wigs = [
+//     [
+//         "your_path.mul"
+//     ],
+//     [
+//         "your_path.mur"
+//     ]
+// ]
 
-Channel
-    .from( reads )
-    .map{ row -> [ row[0], file(row[1], checkIfExists: true) ] }
-    .set{ ch_reads }
+// Channel
+//     .from( wigs )
+//     .map{ row -> file(row[0]) }
+//     .set{ ch_wigs }
 
 workflow NF_EXAMPLE {
-    FASTQC( ch_reads )
+    DOWNLOADANNOTATION()
 
-    READ_NAMES( ch_reads )
+    BIGBEDTOBED()
+
+    PYSCRIPTS()
+
+    BEDTOOLS()
+
+    RPLOTS()
 }
