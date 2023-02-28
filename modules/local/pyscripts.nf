@@ -4,28 +4,20 @@ process PYSCRIPTS {
     container 'nikitinpavel/python_bedtools_machine:1.0'
 
     input:
-    path bam
+    tuple path(mul), path(mur)
 
     output:
-    path "*.bam", emit: bam
+    path "*.tsv", emit: tsv
     path "versions.yml"           , emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
-    script:
-    def args = task.ext.args ?: ''
-    
     """
-    samtools \\
-        sort \\
-        $args \\
-        -@ $task.cpus \\
-        $bam
+    mappability.py $mul $mur > output.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyscripts: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' ))
+        Python: \$(python --version | awk '{print \$2}') 
+        Numpy: python -c "import numpy; print(numpy.__version__)"
+        Pandas: python -c "import pandas; print(pandas.__version__)"
     END_VERSIONS
     """
 }
