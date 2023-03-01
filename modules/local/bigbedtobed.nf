@@ -17,7 +17,7 @@ process BIGBEDTOBED {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        BIGBEDTOBED: 1.0
+        BIGBEDTOBED: \$(/bigBedToBed 2>&1 | head -1 | cut -d" " -f2)
     END_VERSIONS
     """
 }
