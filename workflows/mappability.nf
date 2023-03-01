@@ -1,6 +1,6 @@
 include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
+// include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
 
@@ -23,7 +23,7 @@ workflow MAPPABILITY {
 
     BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
-    PYSCRIPTS( wigs )
+    // PYSCRIPTS( wigs )
 
     // BEDTOOLS(  )
 

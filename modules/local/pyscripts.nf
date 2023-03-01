@@ -10,7 +10,7 @@ process PYSCRIPTS {
     path "*.tsv", emit: tsv
     path "versions.yml"           , emit: versions
 
-    """
+    """ 
     mappability.py $mul $mur > output.tsv
 
     cat <<-END_VERSIONS > versions.yml
