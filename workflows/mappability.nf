@@ -1,15 +1,15 @@
-include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
-include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-// include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
+// include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
+// include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
+include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
 
 wigs = [
     [
-        "test.aligned.mul.wig"
+        "/home/nikitinp/hooman/map_test/test.aligned.mul.wig"
     ],
     [
-        "test.aligned.mur.wig"
+        "/home/nikitinp/hooman/map_test/test.aligned.mur.wig"
     ]
 ]
 
@@ -19,11 +19,11 @@ wigs = [
 //     .set{ ch_wigs }
 
 workflow MAPPABILITY {
-    DOWNLOADANNOTATION(  )
+    // DOWNLOADANNOTATION(  )
 
-    BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
+    // BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
-    // PYSCRIPTS( wigs )
+    PYSCRIPTS( wigs )
 
     // BEDTOOLS(  )
 
