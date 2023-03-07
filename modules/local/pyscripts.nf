@@ -1,7 +1,7 @@
 process PYSCRIPTS {
     label 'process_high'
 
-    container 'nikitinpavel/python_bedtools_machine:1.0'
+    container 'nikitinpavel/python_bedtools_machine:latest'
 
     input:
     tuple path(mul), path(mur)
