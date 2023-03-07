@@ -18,9 +18,9 @@ process PYSCRIPTS {
         Python: \$(python --version | awk '{print \$2}') 
         Numpy: \$(python -c "import numpy; print(numpy.__version__)")
         Pandas: \$(python -c "import pandas; print(pandas.__version__)")
-        Sys: \$(python -c "import sys; print(sys.__version__)")
+        Sys: \$(python -c "import sys; print(sys.version)")
         CSV: \$(python -c "import csv; print(csv.__version__)")
-        Random: \$(python -c "import random; print(random.__version__)")
+        Random: \$(python -c "import random; print(random.version)")
     END_VERSIONS
     """
 }
