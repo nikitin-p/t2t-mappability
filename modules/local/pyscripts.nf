@@ -7,11 +7,11 @@ process PYSCRIPTS {
     tuple path(mul), path(mur)
 
     output:
-    path "*.tsv", emit: tsv
-    path "versions.yml"           , emit: versions
+    path "*.tsv"         , emit: tsv
+    path "versions.yml"  , emit: versions
 
     """ 
-    mappability.py \$mul \$mur > output.tsv
+    mappability.py ${mul} ${mur}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
