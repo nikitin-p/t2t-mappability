@@ -59,9 +59,9 @@ def spectral_function(arr):
     return spectral_dict
 
 test_mul = pd.read_csv(sys.argv[1], sep='\t')
-test_mul_arr = telomere_mul["fixedStep chrom=chr1 start=56 step=1"]
+test_mul_arr = test_mul["fixedStep chrom=chr1 start=56 step=1"]
 test_mur = pd.read_csv(sys.argv[2], sep='\t')
-test_mur_arr = telomere_mur["fixedStep chrom=chr1 start=56 step=1"]
+test_mur_arr = test_mur["fixedStep chrom=chr1 start=56 step=1"]
 
 test_single_arr = []
 for x in range(1,5001):
