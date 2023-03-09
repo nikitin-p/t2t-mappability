@@ -55,38 +55,42 @@ def spectral_function(arr):
             spectral_dict['10000'] += 1
         if i > 10000 and i <= 97700:
             spectral_dict['97700'] += 1
+        if i > 97700:
+            spectral_dict['100000'] += 1
         #Don't forget to calculate values greater than 97700!!!
     return spectral_dict
 
+name_of_region = str(sys.argv[1]).split(".")[1]
+
 test_mul = pd.read_csv(sys.argv[1], sep='\t')
-test_mul_arr = test_mul["fixedStep chrom=chr1 start=56 step=1"]
+test_mul_arr = test_mul[str(test_mul.columns[0])]
 test_mur = pd.read_csv(sys.argv[2], sep='\t')
-test_mur_arr = test_mur["fixedStep chrom=chr1 start=56 step=1"]
+test_mur_arr = test_mur[str(test_mur.columns[0])]
 
 test_single_arr = []
 for x in range(1,5001):
     test_single_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
-with open('test_single.tsv', 'w') as test_single_f_output:
+with open(name_of_region + '_single.tsv', 'w') as test_single_f_output:
     test_single_tsv_output = csv.writer(test_single_f_output, delimiter='\n')
     test_single_tsv_output.writerow(test_single_arr)
 
 test_pair_arr = []
 for x in range(1,301):
     test_pair_arr.append(pairMap(x, 700, 50, test_mul_arr, test_mur_arr))
-with open('test_pair.tsv', 'w') as test_pair_f_output:
+with open(name_of_region + '_pair.tsv', 'w') as test_pair_f_output:
     test_pair_tsv_output = csv.writer(test_pair_f_output, delimiter='\n')
     test_pair_tsv_output.writerow(test_pair_arr)
 
 test_mate_pair_arr = []
 for x in range(1,301):
     test_mate_pair_arr.append(pairMap(x, 5000, 500, test_mul_arr, test_mur_arr))
-with open('test_mate_pair.tsv', 'w') as test_mate_pair_f_output:
+with open(name_of_region + '_mate_pair.tsv', 'w') as test_mate_pair_f_output:
     test_mate_pair_tsv_output = csv.writer(test_mate_pair_f_output, delimiter='\n')
     test_mate_pair_tsv_output.writerow(test_mate_pair_arr)
 
 test_spec_dict = spectral_function(test_mul_arr)
 spectral_for_save = pd.DataFrame(test_spec_dict.items())
-spectral_for_save.to_csv('spectral_plot.tsv', sep="\t")
+spectral_for_save.to_csv(name_of_region + '_spectral_plot.tsv', sep="\t")
 
 # arr = [str(mul), str(mur)]
 # with open('hello.tsv', 'w') as f_output:

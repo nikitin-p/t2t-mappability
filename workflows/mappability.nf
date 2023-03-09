@@ -10,16 +10,16 @@ wigs = [
         "/home/nikitinp/hooman/map_test/test.centromere.chr1.mur.wig"
     ],
     [
-        "/home/nikitinp/hooman/map_test/test.main.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/test.main.chr1.mur.wig"
+        "/home/nikitinp/hooman/map_test/test.arm.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/test.arm.chr1.mur.wig"
     ],
     [
         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mul.wig",
         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mur.wig"
     ],
     [
-        "/home/nikitinp/hooman/map_test/chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/chr1.mur.wig"
+        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
     ]
 ]
 
