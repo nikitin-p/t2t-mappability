@@ -40,9 +40,14 @@ wigs = [
 //     ]
 // ]
 
+// Channel
+//     .from( wigs )
+//     .map{ row -> file(row[0]) }
+//     .set{ ch_wigs }
+
 Channel
     .from( wigs )
-    .map{ row -> file(row[0]) }
+    .map{ row -> [ file(row[1]), file(row[2]) ] }
     .set{ ch_wigs }
 
 ch_wigs.view()
