@@ -1,6 +1,6 @@
 // include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 // include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-// include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
+include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
 
@@ -64,18 +64,17 @@ Channel
 //     .map{ row -> [ row[0], [ file(row[1]), file(row[2]) ] ] }
 //     .set{ ch_wigs }
 
-
-ch_wigs.view()
+// ch_wigs.view()
 
 workflow MAPPABILITY {
     // DOWNLOADANNOTATION(  )
 
     // BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
-    // MAPPINGSTATS( 
+    MAPPINGSTATS( 
         // wigs
-        // ch_wigs
-        // )
+        ch_wigs
+        )
 
     // BEDTOOLS(  )
 
