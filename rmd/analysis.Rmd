@@ -1,0 +1,228 @@
+---
+title: "Mappability analysis"
+author: "Pavel Nikitin, Sviatoslav Sidorov"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Load libraries:
+
+```{r}
+library(dplyr)
+library(ggplot2)
+stringsAsFactors = F
+```
+
+Parse arguments:
+
+```{r}
+args = commandArgs()
+
+spectral.plot.path = args[9]
+
+telomere.single.path = args[10]
+arm.single.path = args[11]
+centromere.single.path = args[12]
+
+telomere.pair.path = args[13]
+arm.pair.path = args[14]
+centromere.pair.path = args[15]
+
+telomere.mate.pair.path = args[16]
+arm.mate.pair.path = args[17]
+centromere.mate.pair.path = args[18]
+```
+
+Upload table of spectral mappability plot:
+
+```{r}
+spectral.plot <- read.delim(spectral.plot.path, header = F,  sep="\t", stringsAsFactors = F)
+names(spectral.plot) = c("n", "uniq.kmer", "number")
+spectral.plot = spectral.plot %>% slice(-1) %>% select(-c(n))
+```
+
+Upload tables of share of unmappable regions in genome:
+
+```{r}
+telomere.single <- read.delim(telomere.single.path, header = F,  sep="\t", stringsAsFactors = F)
+names(telomere.single) = c("Telomere_SE")
+
+arm.single <- read.delim(arm.single.path, header = F,  sep="\t", stringsAsFactors = F)
+names(arm.single) = c("Arm_SE")
+
+centromere.single <- read.delim(centromere.single.path, header = F,  sep="\t", stringsAsFactors = F)
+names(centromere.single) = c("Centromere_SE")
+
+telomere.pair <- read.delim(telomere.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(telomere.pair) = c("Telomere_PE")
+
+arm.pair <- read.delim(arm.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(arm.pair) = c("Arm_PE")
+
+centromere.pair <- read.delim(centromere.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(centromere.pair) = c("Centromere_PE")
+
+telomere.mate.pair <- read.delim(telomere.mate.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(telomere.mate.pair) = c("Telomere_mate")
+
+arm.mate.pair <- read.delim(arm.mate.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(arm.mate.pair) = c("Arm_mate")
+
+centromere.mate.pair <- read.delim(centromere.mate.pair.path, header = F,  sep="\t", stringsAsFactors = F)
+names(centromere.mate.pair) = c("Centromere_mate")
+```
+
+Plot spectral mappability bar:
+
+```{r}
+spec.plot = ggplot(spectral.plot,
+                   aes(x="",
+                       y=number,
+                       fill=factor(uniq.kmer))) + 
+  geom_col(position = position_fill(reverse = TRUE),
+           width = .5) +
+  scale_fill_brewer(palette = "RdBu",
+                    direction=-1) +
+  xlab("CHM13 Chromosome 1") +
+  ylab("Minimum unique\nk-mer length (bp)") +
+  theme_classic()
+
+ggsave("spec_plot.pdf",
+       plot = spec.plot,
+       width = 10,
+       height = 15,
+       scale = 1, 
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+Plot share of unmappable regions in genome with long-read technologies (Oxford Nanopore, PacBio):
+
+```{r}
+fig.long = ggplot() +
+  geom_line(data=telomere.single,
+            aes(x = 1:nrow(telomere.single),
+                y = Telomere_SE,
+                color="Telomere SE"),
+            stat="identity",
+            linewidth=1.5) +
+  geom_line(data=arm.single,
+            aes(x = 1:nrow(arm.single),
+                y = Arm_SE,
+                color="Arm SE"),
+            stat="identity",
+            linewidth=1.5) +
+  geom_line(data=centromere.single,
+            aes(x = 1:nrow(centromere.single),
+                y = Centromere_SE,
+                color="Centromere SE"),
+            stat="identity",
+            linewidth=1.5) +
+  xlab("Read length") +
+  ylab("Share of non-mappable genome") +
+  scale_color_manual(values = c("Telomere SE" = "#F8766D",
+                                "Arm SE" = "#7CAE00",
+                                "Centromere SE" = "#00BFC4"),
+                     name = "Regions")  +
+  theme_classic() +
+  theme(text = element_text(size = 18))
+
+ggsave("fig_long.pdf",
+       plot = fig.long,
+       width = 20,
+       height = 10,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+Plot share of unmappable regions in genome with short-read technologies (Illumina, BGI, IonTorrent, ...):
+
+```{r}
+telomere.single.300 = telomere.single %>% slice(1:300)
+arm.single.300 = arm.single %>% slice(1:300)
+centromere.single.300 = centromere.single %>% slice(1:300)
+
+fig.short = ggplot() +
+  geom_line(data=telomere.single.300,
+            aes(x = 1:nrow(telomere.single.300),
+                y = Telomere_SE,
+                color="Telomere SE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=arm.single.300,
+            aes(x = 1:nrow(arm.single.300),
+                y = Arm_SE,
+                color="Arm SE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=centromere.single.300,
+            aes(x = 1:nrow(centromere.single.300),
+                y = Centromere_SE,
+                color="Centromere SE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=telomere.pair,
+            aes(x = 1:nrow(telomere.pair),
+                y = Telomere_PE,
+                color="Telomere PE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=arm.pair,
+            aes(x = 1:nrow(arm.pair),
+                y = Arm_PE,
+                color="Arm PE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=centromere.pair,
+            aes(x = 1:nrow(centromere.pair),
+                y = Centromere_PE,
+                color="Centromere PE"),
+            stat="identity",
+            size=1.5) +
+  geom_line(data=telomere.mate.pair,
+            aes(x = 1:nrow(telomere.mate.pair),
+                y = Telomere_mate,
+                color="Telomere MP"),
+            stat="identity",
+            size=1) +
+  geom_line(data=arm.mate.pair,
+            aes(x = 1:nrow(arm.mate.pair),
+                y = Arm_mate,
+                color="Arm MP"),
+            stat="identity",
+            size=1) +
+  geom_line(data=centromere.mate.pair,
+            aes(x = 1:nrow(centromere.mate.pair),
+                y = Centromere_mate,
+                color="Centromere MP"),
+            stat="identity",
+            size=1) +
+  xlab("Read length") +
+  ylab("Share of non-mappable genome") +
+  scale_color_manual(values = c("Telomere SE" = "#F8766D",
+                                "Telomere PE" = "red",
+                                "Telomere MP" = "pink",
+                                "Arm SE" = "#7CAE00",
+                                "Arm PE" = "green",
+                                "Arm MP" = "yellow",
+                                "Centromere SE" = "#00BFC4",
+                                "Centromere PE" = "blue",
+                                "Centromere MP" = "violet"),
+                     name = "Regions")  +
+  theme_classic() +
+  theme(text = element_text(size = 18))
+
+ggsave("fig_short.pdf",
+       plot = fig.short,
+       width = 20,
+       height = 10,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+```{r}
+#Add plots for mitochondria, chloroplast, E.coli genome and coronavirus
+```

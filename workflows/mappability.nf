@@ -1,6 +1,6 @@
 // include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 // include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-include { PYSCRIPTS } from '../modules/local/pyscripts.nf'
+include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
 
@@ -13,6 +13,15 @@ wigs = [
     ]
 ]
 
+// test.centromere.chr1.mul.wig
+// test.centromere.chr1.mur.wig
+// test.main.chr1.mul.wig
+// test.main.chr1.mur.wig
+// test.telomere.chr1.mul.wig
+// test.telomere.chr1.mur.wig
+// chr1.mul.wig
+// chr1.mur.wig
+
 // Channel
 //     .from( wigs )
 //     .map{ row -> file(row[0]) }
@@ -23,7 +32,10 @@ workflow MAPPABILITY {
 
     // BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
-    PYSCRIPTS( wigs )
+    MAPPINGSTATS( 
+        wigs
+        // ch_wigs
+        )
 
     // BEDTOOLS(  )
 

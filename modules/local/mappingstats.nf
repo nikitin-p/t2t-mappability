@@ -1,4 +1,4 @@
-process PYSCRIPTS {
+process MAPPINGSTATS {
     label 'process_high'
 
     container 'nikitinpavel/python_bedtools_machine:latest'
@@ -10,6 +10,7 @@ process PYSCRIPTS {
     path "*.tsv"         , emit: tsv
     path "versions.yml"  , emit: versions
 
+    script:
     """ 
     mappability.py ${mul} ${mur}
 
