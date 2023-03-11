@@ -92,7 +92,7 @@ workflow MAPPABILITY {
     //     )
 
     SPECTRALPLOT(
-        .set{ ch_wigs_full }
+        ch_wigs_full
     )
 
     // BEDTOOLS(  )
