@@ -20,7 +20,7 @@ def spectral_function(arr):
         if int(i) > 25 and int(i) <= 35:
             spectral_dict['35'] += 1
         if int(i) > 35 and int(i) <= 50:
-            spectral_dict['50'] += 1
+            spectral_dict['50'] += 1 
         if int(i) > 50 and int(i) <= 100:
             spectral_dict['100'] += 1
         if int(i) > 100 and int(i) <= 300:
@@ -38,9 +38,9 @@ def spectral_function(arr):
 
 name_of_region = str(sys.argv[1]).split(".")[1]
 
-test_mul = pd.read_csv(sys.argv[1], sep='\t')
+test_mul = pd.read_csv(sys.argv[1], sep='\t', encoding='utf-8', engine='python')
 test_mul_arr = test_mul[str(test_mul.columns[0])]
-test_mur = pd.read_csv(sys.argv[2], sep='\t')
+test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
 test_spec_mul_dict = spectral_function(test_mul_arr)
