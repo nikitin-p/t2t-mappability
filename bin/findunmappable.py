@@ -16,7 +16,7 @@ def singleMap(read_length:int, mul_arr, mur_arr):
             single_logic.append(True) # Read maps uniquely
         else:
             single_logic.append(False) # Read does not map uniquely
-    return (len(single_logic) - sum(single_logic)) / len(single_logic)
+    return single_logic
 
 def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur_arr):
     np.random.seed(0)
@@ -30,37 +30,46 @@ def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur
             pair_logic.append(True) # Read maps uniquely
         else:
             pair_logic.append(False) # Read does not map uniquely
-    return (len(pair_logic) - sum(pair_logic)) / len(pair_logic)
+    return pair_logic
+
+def array_to_bed(arr):
+    out = []
+    pair = []
+    for i in range(len(arr)):
+        if i == 0:
+            prev = True
+        else:
+            prev = arr[i-1]   
+        if arr[i]==False and prev==True:
+            pair.append(i)
+        if arr[i]==True and prev==False:
+            pair.append(i-1)
+            out.append(pair)
+            pair=[]
+        if i == len(arr)-1 and arr[i]==False:
+            pair.append(i)
+            out.append(pair)
+            pair=[]
+    return out
 
 name_of_region = str(sys.argv[1]).split(".")[1]
 
 test_mul = pd.read_csv(sys.argv[1], sep='\t', encoding='utf-8', engine='python')
+test_mul = test_mul.iloc[56:]
 test_mul_arr = test_mul[str(test_mul.columns[0])]
 test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
-test_single_arr = []
-for x in range(1,5001):
-    test_single_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
-with open(name_of_region + '_single.tsv', 'w') as test_single_f_output:
-    test_single_tsv_output = csv.writer(test_single_f_output, delimiter='\n')
-    test_single_tsv_output.writerow(test_single_arr)
+chr_name = list(mul.columns.values)[0].split(' ')[1].split('=')[1]
+spacing = int(list(mur.columns.values)[0].split(' ')[2].split('=')[1])
 
-test_pair_arr = []
-for x in range(1,301):
-    test_pair_arr.append(pairMap(x, 700, 50, test_mul_arr, test_mur_arr))
-with open(name_of_region + '_pair.tsv', 'w') as test_pair_f_output:
-    test_pair_tsv_output = csv.writer(test_pair_f_output, delimiter='\n')
-    test_pair_tsv_output.writerow(test_pair_arr)
+#start = 56
+min_read_length = 150
+#single_res = singleMap(x, mul_arr, mur_arr)
+#single_arr = array_to_bed(single_res)
+pair_res = pairMap(min_read_length, 700, 50, test_mul_arr, test_mur_arr)
+pair_arr = array_to_bed(pair_res)
 
-test_mate_pair_arr = []
-for x in range(1,301):
-    test_mate_pair_arr.append(pairMap(x, 5000, 500, test_mul_arr, test_mur_arr))
-with open(name_of_region + '_mate_pair.tsv', 'w') as test_mate_pair_f_output:
-    test_mate_pair_tsv_output = csv.writer(test_mate_pair_f_output, delimiter='\n')
-    test_mate_pair_tsv_output.writerow(test_mate_pair_arr)
-
-# arr = [str(mul), str(mur)]
-# with open('hello.tsv', 'w') as f_output:
-#     tsv_output = csv.writer(f_output, delimiter='\n')
-#     tsv_output.writerow(arr)
+with open(name_of_region + '_pair_reads_unmappable.bed', 'w') as test_pair_f_output:
+    for i in pair_arr:
+        print(chr_name + '\t' + str(i[0] + spacing) + '\t' + str(i[1] + spacing), file=test_pair_f_output)

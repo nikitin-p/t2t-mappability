@@ -36,7 +36,7 @@ def spectral_function(arr):
         #Don't forget to calculate values greater than 97700!!!
     return spectral_dict
 
-name_of_region = str(sys.argv[1]).split(".")[1]
+name_of_region = str(sys.argv[1]).split(".")[0]
 
 test_mul = pd.read_csv(sys.argv[1], sep='\t', encoding='utf-8', engine='python')
 test_mul_arr = test_mul[str(test_mul.columns[0])]

@@ -1,9 +1,10 @@
 // include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 // include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
 // include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
-include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
+// include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
+include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
 
 // Use this
 // wigs = [
@@ -25,12 +26,19 @@ include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
 //     ]
 // ]
 
-wigs_full = [
+wigs_chr1_full = [
     [
-        "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa.mul.wig",
-        "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa.mur.wig"
+        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
     ]
 ]
+
+// wigs_full = [
+//     [
+//         "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa.mul.wig",
+//         "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa.mur.wig"
+//     ]
+// ]
 
 // reads = [
 //     [
@@ -69,10 +77,15 @@ wigs_full = [
 //     .map{ row -> [ file(row[0]), file(row[1]) ] }
 //     .set{ ch_wigs }
 
+// Channel
+//     .from( wigs_full )
+//     .map{ row -> [ file(row[0]), file(row[1]) ] }
+//     .set{ ch_wigs_full }
+
 Channel
-    .from( wigs_full )
+    .from( wigs_chr1_full )
     .map{ row -> [ file(row[0]), file(row[1]) ] }
-    .set{ ch_wigs_full }
+    .set{ ch_wigs_chr1_full }
 
 // Channel
 //     .from( wigs )
@@ -91,11 +104,15 @@ workflow MAPPABILITY {
     //     ch_wigs
     //     )
 
-    SPECTRALPLOT(
-        ch_wigs_full
-    )
+    // SPECTRALPLOT(
+    //     ch_wigs_full
+    // )
 
     // BEDTOOLS(  )
 
     // RPLOTS(  )
+
+    FINDUNMAPPABLE(
+        ch_wigs_chr1_full
+    )
 }
