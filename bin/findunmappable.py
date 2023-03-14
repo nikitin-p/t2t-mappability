@@ -55,10 +55,10 @@ def array_to_bed(arr):
 name_of_region = str(sys.argv[1]).split(".")[1]
 
 test_mul = pd.read_csv(sys.argv[1], sep='\t', encoding='utf-8', engine='python')
-#test_mul = test_mul.iloc[56:]
+test_mul = test_mul.iloc[56:]
 test_mul_arr = test_mul[str(test_mul.columns[0])]
 test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
-#test_mur = test_mul.iloc[:-56]
+test_mur = test_mul.iloc[:-56]
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
 chr_name = list(test_mul.columns.values)[0].split(' ')[1].split('=')[1]
@@ -71,6 +71,13 @@ min_read_length = 150
 pair_res = pairMap(min_read_length, 700, 50, test_mul_arr, test_mur_arr)
 pair_arr = array_to_bed(pair_res)
 
+single_res = singleMap(min_read_length, test_mul_arr, test_mur_arr)
+single_arr = array_to_bed(single_res)
+
 with open(name_of_region + '_pair_reads_unmappable.bed', 'w') as test_pair_f_output:
     for i in pair_arr:
         print(chr_name + '\t' + str(i[0] + spacing) + '\t' + str(i[1] + spacing), file=test_pair_f_output)
+
+with open(name_of_region + '_single_reads_unmappable.bed', 'w') as test_single_f_output:
+    for i in single_arr:
+        print(chr_name + '\t' + str(i[0] + spacing) + '\t' + str(i[1] + spacing), file=test_single_f_output)
