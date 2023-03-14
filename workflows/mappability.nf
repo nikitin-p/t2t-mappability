@@ -26,12 +26,12 @@ include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
 //     ]
 // ]
 
-wigs_chr1_full = [
-    [
-        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
-    ]
-]
+// wigs_chr1_full = [
+//     [
+//         "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
+//     ]
+// ]
 
 // wigs_full = [
 //     [
@@ -66,6 +66,13 @@ wigs_chr1_full = [
 //     ]
 // ]
 
+wigs_chr1_full_test = [
+    [
+        "/home/nikitinp/hooman/map_test/test.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/test.chr1.mur.wig"
+    ]
+]
+
 // Channel
 //     .from( wigs )
 //     .map{ row -> file(row[0]) }
@@ -82,10 +89,15 @@ wigs_chr1_full = [
 //     .map{ row -> [ file(row[0]), file(row[1]) ] }
 //     .set{ ch_wigs_full }
 
+// Channel
+//     .from( wigs_chr1_full )
+//     .map{ row -> [ file(row[0]), file(row[1]) ] }
+//     .set{ ch_wigs_chr1_full }
+
 Channel
-    .from( wigs_chr1_full )
+    .from( wigs_chr1_full_test )
     .map{ row -> [ file(row[0]), file(row[1]) ] }
-    .set{ ch_wigs_chr1_full }
+    .set{ ch_wigs_chr1_full_test }
 
 // Channel
 //     .from( wigs )
@@ -113,6 +125,7 @@ workflow MAPPABILITY {
     // RPLOTS(  )
 
     FINDUNMAPPABLE(
-        ch_wigs_chr1_full
+        // ch_wigs_chr1_full
+        ch_wigs_chr1_full_test
     )
 }
