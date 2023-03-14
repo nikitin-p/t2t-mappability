@@ -60,8 +60,8 @@ test_mul_arr = test_mul[str(test_mul.columns[0])]
 test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
-chr_name = list(mul.columns.values)[0].split(' ')[1].split('=')[1]
-spacing = int(list(mur.columns.values)[0].split(' ')[2].split('=')[1])
+chr_name = list(test_mul.columns.values)[0].split(' ')[1].split('=')[1]
+spacing = int(list(test_mur.columns.values)[0].split(' ')[2].split('=')[1])
 
 #start = 56
 min_read_length = 150
