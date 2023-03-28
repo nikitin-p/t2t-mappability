@@ -223,6 +223,114 @@ ggsave("fig_short.pdf",
        limitsize = FALSE)
 ```
 
+Additional plots for mitochondria, chloroplast, E.coli genome and coronavirus
+
 ```{r}
-#Add plots for mitochondria, chloroplast, E.coli genome and coronavirus
+spectral.plot.path.ecoli = '../python_notebooks/e_coli_mul_spectral_plot.tsv'
+spectral.plot.path.sc2 = '../python_notebooks/sars_cov2_mul_spectral_plot.tsv'
+spectral.plot.path.osc = '../python_notebooks/oryza_sativa_chloroplast_mul_spectral_plot.tsv'
+spectral.plot.path.hm = '../python_notebooks/human_mitochondrion_mul_spectral_plot.tsv'
+
+spectral.plot.ecoli <- read.delim(spectral.plot.path.ecoli, header = F,  sep="\t", stringsAsFactors = F)
+spectral.plot.sc2 <- read.delim(spectral.plot.path.sc2, header = F,  sep="\t", stringsAsFactors = F)
+spectral.plot.osc <- read.delim(spectral.plot.path.osc, header = F,  sep="\t", stringsAsFactors = F)
+spectral.plot.hm <- read.delim(spectral.plot.path.hm, header = F,  sep="\t", stringsAsFactors = F)
+
+names(spectral.plot.ecoli) = c("n", "uniq.kmer", "number")
+names(spectral.plot.sc2) = c("n", "uniq.kmer", "number")
+names(spectral.plot.osc) = c("n", "uniq.kmer", "number")
+names(spectral.plot.hm) = c("n", "uniq.kmer", "number")
+
+spectral.plot.ecoli = spectral.plot.ecoli %>% slice(-1) %>% select(-c(n))
+spectral.plot.sc2 = spectral.plot.sc2 %>% slice(-1) %>% select(-c(n))
+spectral.plot.osc = spectral.plot.osc %>% slice(-1) %>% select(-c(n))
+spectral.plot.hm = spectral.plot.hm %>% slice(-1) %>% select(-c(n))
+```
+
+```{r}
+spec.plot.ecoli = ggplot(spectral.plot.ecoli,
+                   aes(x="",
+                       y=number,
+                       fill=factor(uniq.kmer))) + 
+  geom_col(position = position_fill(reverse = TRUE),
+           width = .5) +
+  scale_fill_brewer(palette = "RdBu",
+                    direction=-1) +
+  xlab("E. coli") +
+  ylab("Minimum unique\nk-mer length (bp)") +
+  theme_classic()
+
+ggsave("spec_plot_ecoli.pdf",
+       plot = spec.plot.ecoli,
+       width = 10,
+       height = 15,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+```{r}
+spec.plot.sc2 = ggplot(spectral.plot.sc2,
+                   aes(x="",
+                       y=number,
+                       fill=factor(uniq.kmer))) + 
+  geom_col(position = position_fill(reverse = TRUE),
+           width = .5) +
+  scale_fill_brewer(palette = "RdBu",
+                    direction=-1) +
+  xlab("SARS-CoV-2") +
+  ylab("Minimum unique\nk-mer length (bp)") +
+  theme_classic()
+
+ggsave("spec_plot_sc2.pdf",
+       plot = spec.plot.sc2,
+       width = 10,
+       height = 15,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+```{r}
+spec.plot.osc = ggplot(spectral.plot.osc,
+                   aes(x="",
+                       y=number,
+                       fill=factor(uniq.kmer))) + 
+  geom_col(position = position_fill(reverse = TRUE),
+           width = .5) +
+  scale_fill_brewer(palette = "RdBu",
+                    direction=-1) +
+  xlab("Oryza sativa chloroplast") +
+  ylab("Minimum unique\nk-mer length (bp)") +
+  theme_classic()
+
+ggsave("spec_plot_osc.pdf",
+       plot = spec.plot.osc,
+       width = 10,
+       height = 15,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
+```
+
+```{r}
+spec.plot.hm = ggplot(spectral.plot.hm,
+                   aes(x="",
+                       y=number,
+                       fill=factor(uniq.kmer))) + 
+  geom_col(position = position_fill(reverse = TRUE),
+           width = .5) +
+  scale_fill_brewer(palette = "RdBu",
+                    direction=-1) +
+  xlab("Human mitochondrion") +
+  ylab("Minimum unique\nk-mer length (bp)") +
+  theme_classic()
+
+ggsave("spec_plot_hm.pdf",
+       plot = spec.plot.hm,
+       width = 10,
+       height = 15,
+       scale = 1,
+       units = c("cm"),
+       limitsize = FALSE)
 ```
