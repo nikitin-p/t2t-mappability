@@ -18,6 +18,31 @@ def singleMap(read_length:int, mul_arr, mur_arr):
             single_logic.append(False) # Read does not map uniquely
     return single_logic
 
+def singleMap_bed(read_length:int, mul_arr, mur_arr):
+    out = []
+    pair = []
+    prev = True
+    for i in range(len(mul_arr)):
+        if i + read_length - 1 > len(mur_arr) - 1:
+            if not prev:
+                pair.append(i)
+                out.append(pair)
+                pair=[]
+                break
+        if mul_arr[i] <= read_length or \
+        mur_arr[i + read_length - 1] <= read_length:
+            flag = True # Read maps uniquely
+            if not prev:
+                pair.append(i-1)
+                out.append(pair)
+                pair=[]
+        else:
+            flag = False # Read does not map uniquely
+            if prev:
+                pair.append(i)
+        prev = flag
+    return out
+
 def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur_arr):
     np.random.seed(0)
     pair_logic = []
@@ -31,6 +56,30 @@ def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur
         else:
             pair_logic.append(False) # Read does not map uniquely
     return pair_logic
+
+def pairMap_bed(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur_arr):
+    np.random.seed(0)
+    out = []
+    pair = []
+    prev = True
+    distr = np.random.normal(fragment_length, fragment_std, len(mul_arr))
+    for i in range(len(mul_arr)):
+        if i + int(distr[i]) - 1 > len(mur_arr) - 1:
+            break
+        if mul_arr[i] <= read_length or \
+        mur_arr[i + int(distr[i]) - 1] <= read_length:
+            flag = True # Read maps uniquely
+            if not prev:
+                pair.append(i-1)
+                out.append(pair)
+                pair=[]
+        else:
+            flag = False # Read does not map uniquely
+            if prev:
+                pair.append(i)
+            #single_logic.append(False) # Read does not map uniquely
+        prev = flag
+    return out
 
 def array_to_bed(arr):
     out = []
@@ -62,26 +111,24 @@ chr_name = list(test_mul.columns.values)[0].split(' ')[1].split('=')[1]
 
 spacing = int(list(test_mur.columns.values)[0].split(' ')[2].split('=')[1])
 
-test_mul = test_mul.iloc[56:].reset_index()
-test_mul_arr = test_mul[str(test_mul.columns[0])]
+test_mul_arr = test_mul[str(test_mul.columns[0])].tolist()[spacing-1:]
 
-test_mur = test_mur.iloc[:-56]
-test_mur_arr = test_mur[str(test_mur.columns[0])]
+test_mur_arr = test_mur[str(test_mur.columns[0])].tolist()[:-spacing-1]
 
 #start = 56
 min_read_length = 150
 #single_res = singleMap(x, mul_arr, mur_arr)
 #single_arr = array_to_bed(single_res)
 pair_res = pairMap(min_read_length, 700, 50, test_mul_arr, test_mur_arr)
-pair_arr = array_to_bed(pair_res)
+#pair_arr = array_to_bed(pair_res)
 
 single_res = singleMap(min_read_length, test_mul_arr, test_mur_arr)
-single_arr = array_to_bed(single_res)
+#single_arr = array_to_bed(single_res)
 
 with open(name_of_region + '_pair_reads_unmappable.bed', 'w') as test_pair_f_output:
-    for i in pair_arr:
+    for i in pair_res:
         print(chr_name + '\t' + str(i[0] + spacing) + '\t' + str(i[1] + spacing), file=test_pair_f_output)
 
 with open(name_of_region + '_single_reads_unmappable.bed', 'w') as test_single_f_output:
-    for i in single_arr:
-        print(chr_name + '\t' + str(i[0] + spacing) + '\t' + str(i[1] + spacing), file=test_single_f_output)
+    for i in single_res:
+        print(chr_name + '\t' + str(i[0] + spacing - 1) + '\t' + str(i[1] + spacing), file=test_single_f_output)
