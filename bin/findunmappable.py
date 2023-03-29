@@ -119,10 +119,10 @@ test_mur_arr = test_mur[str(test_mur.columns[0])].tolist()[:-spacing-1]
 min_read_length = 150
 #single_res = singleMap(x, mul_arr, mur_arr)
 #single_arr = array_to_bed(single_res)
-pair_res = pairMap(min_read_length, 700, 50, test_mul_arr, test_mur_arr)
+pair_res = pairMap_bed(min_read_length, 700, 50, test_mul_arr, test_mur_arr)
 #pair_arr = array_to_bed(pair_res)
 
-single_res = singleMap(min_read_length, test_mul_arr, test_mur_arr)
+single_res = singleMap_bed(min_read_length, test_mul_arr, test_mur_arr)
 #single_arr = array_to_bed(single_res)
 
 with open(name_of_region + '_pair_reads_unmappable.bed', 'w') as test_pair_f_output:
