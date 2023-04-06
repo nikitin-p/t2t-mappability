@@ -113,10 +113,7 @@ workflow MAPPABILITY {
     DOWNLOADANNOTATION(  )
 
     BIGBEDTOBED( 
-        DOWNLOADANNOTATION.out.censat
-    )
-    
-    BIGBEDTOBED( 
+        DOWNLOADANNOTATION.out.censat,
         DOWNLOADANNOTATION.out.rmsk
     )
 

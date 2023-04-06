@@ -4,16 +4,21 @@ process BIGBEDTOBED {
     container 'sviatsidorov/uniqmaptrack:1.1'
 
     input:
-    path bigbed
+    path bigbedcensat
+    path bigbedrmsk
 
     output:
     path "*.bed", emit: bed
     path "versions.yml"           , emit: versions
 
     """
-    /bigBedToBed ${bigbed} annotation.tmp
+    /bigBedToBed ${bigbedcensat} censatannotation.tmp
 
-    awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1] }}' annotation.tmp > ${bigbed.baseName}.bed
+    awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1] }}' censatannotation.tmp > censatannotation.bed
+
+    /bigBedToBed ${bigbedrmsk} rmskannotation.tmp
+
+    awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1] }}' rmskannotation.tmp > rmskannotation.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
