@@ -1,37 +1,38 @@
-// include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
-// include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
+include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
+include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
+// include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 // include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
-// include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
-include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
+// include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
+// include { BEDTOOLS } from '../modules/local/bedtools.nf'
 
 // Use this
-wigs = [
-    [
-        "/home/nikitinp/hooman/map_test/test.centromere.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/test.centromere.chr1.mur.wig"
-    ],
-    [
-        "/home/nikitinp/hooman/map_test/test.arm.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/test.arm.chr1.mur.wig"
-    ],
-    [
-        "/home/nikitinp/hooman/map_test/test.telomere.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/test.telomere.chr1.mur.wig"
-    ],
-    [
-        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
-    ]
-]
+// wigs = [
+//     [
+//         "/home/nikitinp/hooman/map_test/test.centromere.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/test.centromere.chr1.mur.wig"
+//     ],
+//     [
+//         "/home/nikitinp/hooman/map_test/test.arm.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/test.arm.chr1.mur.wig"
+//     ],
+//     [
+//         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mur.wig"
+//     ],
+//     [
+//         "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
+//     ]
+// ]
 
-wigs_chr1_full = [
-    [
-        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
-    ]
-]
+// wigs_chr1_full = [
+//     [
+//         "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
+//     ]
+// ]
+
 
 // wigs_full = [
 //     [
@@ -78,21 +79,23 @@ wigs_chr1_full = [
 //     .map{ row -> file(row[0]) }
 //     .set{ ch_wigs }
 
+
 // Use this
-Channel
-    .from( wigs )
-    .map{ row -> [ file(row[0]), file(row[1]) ] }
-    .set{ ch_wigs }
+// Channel
+//     .from( wigs )
+//     .map{ row -> [ file(row[0]), file(row[1]) ] }
+//     .set{ ch_wigs }
+
+// Use this
+// Channel
+//     .from( wigs_chr1_full )
+//     .map{ row -> [ file(row[0]), file(row[1]) ] }
+//     .set{ ch_wigs_chr1_full }
 
 // Channel
 //     .from( wigs_full )
 //     .map{ row -> [ file(row[0]), file(row[1]) ] }
 //     .set{ ch_wigs_full }
-
-Channel
-    .from( wigs_chr1_full )
-    .map{ row -> [ file(row[0]), file(row[1]) ] }
-    .set{ ch_wigs_chr1_full }
 
 // Channel
 //     .from( wigs_chr1_full_test )
@@ -107,25 +110,28 @@ Channel
 // ch_wigs.view()
 
 workflow MAPPABILITY {
-    // DOWNLOADANNOTATION(  )
+    DOWNLOADANNOTATION(  )
 
-    // BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
+    BIGBEDTOBED( 
+        DOWNLOADANNOTATION.out.censat,
+        DOWNLOADANNOTATION.out.rmsk
+    )
 
-    MAPPINGSTATS( 
-        // wigs
-        ch_wigs
-        )
+    // MAPPINGSTATS( 
+    //     // wigs
+    //     ch_wigs
+    //     )
 
     // SPECTRALPLOT(
     //     ch_wigs_full
     // )
 
-    // BEDTOOLS(  )
-
     // RPLOTS(  )
 
-    FINDUNMAPPABLE(
-        ch_wigs_chr1_full
-        // ch_wigs_chr1_full_test
-    )
+    // FINDUNMAPPABLE(
+    //     ch_wigs_chr1_full
+    //     // ch_wigs_chr1_full_test
+    // )
+
+    // BEDTOOLS(  )
 }

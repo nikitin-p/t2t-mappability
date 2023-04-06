@@ -5,10 +5,12 @@ process DOWNLOADANNOTATION {
 
     output:
     path "cenSatAnnotation.bigBed", emit: censat
+    path "rmsk.bigBed", emit: rmsk
     path "versions.yml"           , emit: versions
 
     """
     wget https://t2t.gi.ucsc.edu/chm13/hub/t2t-chm13-v1.1/cenSat/cenSatAnnotation.bigBed
+    wget https://t2t.gi.ucsc.edu/chm13/hub/t2t-chm13-v1.1/rmsk/rmsk.bigBed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
