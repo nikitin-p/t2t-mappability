@@ -1,6 +1,6 @@
 // include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 // include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-// include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
+include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 // include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
@@ -111,10 +111,10 @@ workflow MAPPABILITY {
 
     // BIGBEDTOBED( DOWNLOADANNOTATION.out.censat )
 
-    // MAPPINGSTATS( 
-    //     // wigs
-    //     ch_wigs
-    //     )
+    MAPPINGSTATS( 
+        // wigs
+        ch_wigs
+        )
 
     // SPECTRALPLOT(
     //     ch_wigs_full

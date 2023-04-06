@@ -58,16 +58,20 @@ def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur
     return pair_logic
 
 def pairMap_bed(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur_arr):
-    np.random.seed(0)
+    # np.random.seed(0)
     out = []
     pair = []
     prev = True
-    distr = np.random.normal(fragment_length, fragment_std, len(mul_arr))
+    # distr = np.random.normal(fragment_length, fragment_std, len(mul_arr))
+    distr = 700
     for i in range(len(mul_arr)):
-        if i + int(distr[i]) - 1 > len(mur_arr) - 1:
+        # if i + int(distr[i]) - 1 > len(mur_arr) - 1:
+        if i + int(distr) - 1 > len(mur_arr) - 1:
             break
+        # if mul_arr[i] <= read_length or \
+        # mur_arr[i + int(distr[i]) - 1] <= read_length:
         if mul_arr[i] <= read_length or \
-        mur_arr[i + int(distr[i]) - 1] <= read_length:
+        mur_arr[i + int(distr) - 1] <= read_length:
             flag = True # Read maps uniquely
             if not prev:
                 pair.append(i-1)

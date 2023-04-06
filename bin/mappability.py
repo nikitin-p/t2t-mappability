@@ -19,14 +19,18 @@ def singleMap(read_length:int, mul_arr, mur_arr):
     return (len(single_logic) - sum(single_logic)) / len(single_logic)
 
 def pairMap(read_length:int, fragment_length:int, fragment_std:int, mul_arr, mur_arr):
-    np.random.seed(0)
+    # np.random.seed(0)
     pair_logic = []
-    distr = np.random.normal(fragment_length, fragment_std, len(mul_arr))
+    # distr = np.random.normal(fragment_length, fragment_std, len(mul_arr))
+    distr = 700
     for i in range(len(mul_arr)):
-        if i + int(distr[i]) - 1 > len(mur_arr) - 1:
+        # if i + int(distr[i]) - 1 > len(mur_arr) - 1:
+        if i + int(distr) - 1 > len(mur_arr) - 1:
             break
+        # if mul_arr[i] <= read_length or \
+        # mur_arr[i + int(distr[i]) - 1] <= read_length:
         if mul_arr[i] <= read_length or \
-        mur_arr[i + int(distr[i]) - 1] <= read_length:
+        mur_arr[i + int(distr) - 1] <= read_length:
             pair_logic.append(True) # Read maps uniquely
         else:
             pair_logic.append(False) # Read does not map uniquely
@@ -40,11 +44,18 @@ test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
 test_single_arr = []
-for x in range(1,5001):
+for x in range(1,301):
     test_single_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
 with open(name_of_region + '_single.tsv', 'w') as test_single_f_output:
     test_single_tsv_output = csv.writer(test_single_f_output, delimiter='\n')
     test_single_tsv_output.writerow(test_single_arr)
+
+test_long_arr = []
+for x in range(1,100001,100):
+    test_long_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
+with open(name_of_region + '_long.tsv', 'w') as test_long_f_output:
+    test_long_tsv_output = csv.writer(test_long_f_output, delimiter='\n')
+    test_long_tsv_output.writerow(test_long_arr)
 
 test_pair_arr = []
 for x in range(1,301):
