@@ -7,24 +7,24 @@ include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
 
 // Use this
-// wigs = [
-//     [
-//         "/home/nikitinp/hooman/map_test/test.centromere.chr1.mul.wig",
-//         "/home/nikitinp/hooman/map_test/test.centromere.chr1.mur.wig"
-//     ],
-//     [
-//         "/home/nikitinp/hooman/map_test/test.arm.chr1.mul.wig",
-//         "/home/nikitinp/hooman/map_test/test.arm.chr1.mur.wig"
-//     ],
-//     [
-//         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mul.wig",
-//         "/home/nikitinp/hooman/map_test/test.telomere.chr1.mur.wig"
-//     ],
-//     [
-//         "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
-//         "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
-//     ]
-// ]
+wigs = [
+    [
+        "/home/nikitinp/hooman/map_test/test.centromere.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/test.centromere.chr1.mur.wig"
+    ],
+    [
+        "/home/nikitinp/hooman/map_test/test.arm.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/test.arm.chr1.mur.wig"
+    ],
+    [
+        "/home/nikitinp/hooman/map_test/test.telomere.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/test.telomere.chr1.mur.wig"
+    ],
+    [
+        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
+    ]
+]
 
 wigs_chr1_full = [
     [
@@ -79,10 +79,10 @@ wigs_chr1_full = [
 //     .set{ ch_wigs }
 
 // Use this
-// Channel
-//     .from( wigs )
-//     .map{ row -> [ file(row[0]), file(row[1]) ] }
-//     .set{ ch_wigs }
+Channel
+    .from( wigs )
+    .map{ row -> [ file(row[0]), file(row[1]) ] }
+    .set{ ch_wigs }
 
 // Channel
 //     .from( wigs_full )
