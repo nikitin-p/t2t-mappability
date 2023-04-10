@@ -44,7 +44,7 @@ test_mur = pd.read_csv(sys.argv[2], sep='\t', encoding='utf-8', engine='python')
 test_mur_arr = test_mur[str(test_mur.columns[0])]
 
 test_single_arr = []
-for x in range(1,301):
+for x in range(1,301,10):
     test_single_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
 with open(name_of_region + '_single.tsv', 'w') as test_single_f_output:
     test_single_tsv_output = csv.writer(test_single_f_output, delimiter='\n')
@@ -58,14 +58,14 @@ with open(name_of_region + '_long.tsv', 'w') as test_long_f_output:
     test_long_tsv_output.writerow(test_long_arr)
 
 test_pair_arr = []
-for x in range(1,301):
+for x in range(1,301,10):
     test_pair_arr.append(pairMap(x, 700, 50, test_mul_arr, test_mur_arr))
 with open(name_of_region + '_pair.tsv', 'w') as test_pair_f_output:
     test_pair_tsv_output = csv.writer(test_pair_f_output, delimiter='\n')
     test_pair_tsv_output.writerow(test_pair_arr)
 
 test_mate_pair_arr = []
-for x in range(1,301):
+for x in range(1,301,10):
     test_mate_pair_arr.append(pairMap(x, 5000, 500, test_mul_arr, test_mur_arr))
 with open(name_of_region + '_mate_pair.tsv', 'w') as test_mate_pair_f_output:
     test_mate_pair_tsv_output = csv.writer(test_mate_pair_f_output, delimiter='\n')
