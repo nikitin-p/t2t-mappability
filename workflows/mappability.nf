@@ -1,6 +1,6 @@
-// include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
-// include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
-include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
+include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
+include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
+// include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 // include { SPECTRALPLOT } from '../modules/local/spectralplot.nf'
 // include { RPLOTS } from '../modules/local/rplots.nf'
 // include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
@@ -26,12 +26,12 @@ include { MAPPINGSTATS } from '../modules/local/mappingstats.nf'
 //     ]
 // ]
 
-wigs_chr1_full = [
-    [
-        "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
-        "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
-    ]
-]
+// wigs_chr1_full = [
+//     [
+//         "/home/nikitinp/hooman/map_test/full.chr1.mul.wig",
+//         "/home/nikitinp/hooman/map_test/full.chr1.mur.wig"
+//     ]
+// ]
 
 // wigs_full = [
 //     [
@@ -86,10 +86,10 @@ wigs_chr1_full = [
 //     .set{ ch_wigs }
 
 // Use this
-Channel
-    .from( wigs_chr1_full )
-    .map{ row -> [ file(row[0]), file(row[1]) ] }
-    .set{ ch_wigs_chr1_full }
+// Channel
+//     .from( wigs_chr1_full )
+//     .map{ row -> [ file(row[0]), file(row[1]) ] }
+//     .set{ ch_wigs_chr1_full }
 
 // Channel
 //     .from( wigs_full )
@@ -109,18 +109,18 @@ Channel
 // ch_wigs.view()
 
 workflow MAPPABILITY {
-    // DOWNLOADANNOTATION(  )
+    DOWNLOADANNOTATION(  )
 
-    // BIGBEDTOBED( 
-    //     DOWNLOADANNOTATION.out.censat,
-    //     DOWNLOADANNOTATION.out.rmsk
-    // )
+    BIGBEDTOBED( 
+        DOWNLOADANNOTATION.out.censat,
+        DOWNLOADANNOTATION.out.rmsk
+    )
 
-    MAPPINGSTATS( 
-        // wigs
-        ch_wigs_chr1_full
-        // ch_wigs
-        )
+    // MAPPINGSTATS( 
+    //     // wigs
+    //     ch_wigs_chr1_full
+    //     // ch_wigs
+    //     )
 
     // SPECTRALPLOT(
     //     ch_wigs_full

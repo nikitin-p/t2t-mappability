@@ -14,7 +14,11 @@ process BIGBEDTOBED {
     """
     /bigBedToBed ${bigbedcensat} censatannotation.tmp
 
-    awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1] }}' censatannotation.tmp > censatannotation.bed
+    awk '{ { OFS="\t" }; print \$1,\$2,\$3,\$4 }' censatannotation.tmp | \
+    tr "(" "\t" | tr -d ")" | \
+    awk 'BEGIN{{ OFS="\t" }}{{ split(\$4,A,"_"); print \$1,\$2,\$3,A[1],\$5 }}' | \
+    tr "_" "-" | \
+    awk '{{ OFS="\t" }; if (\$5) {print \$1,\$2,\$3,\$4"_"\$5} else {print \$1,\$2,\$3,\$4} }' > censatannotation.bed
 
     /bigBedToBed ${bigbedrmsk} rmskannotation.tmp
 
