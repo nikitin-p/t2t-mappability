@@ -118,7 +118,7 @@ workflow MAPPABILITY {
 
     MAPPINGSTATS( 
         // wigs
-        wigs_chr1_full
+        ch_wigs_chr1_full
         // ch_wigs
         )
 
