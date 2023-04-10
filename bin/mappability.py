@@ -51,7 +51,7 @@ with open(name_of_region + '_single.tsv', 'w') as test_single_f_output:
     test_single_tsv_output.writerow(test_single_arr)
 
 test_long_arr = []
-for x in range(1,100001,100):
+for x in range(1,100001,1000):
     test_long_arr.append(singleMap(x, test_mul_arr, test_mur_arr))
 with open(name_of_region + '_long.tsv', 'w') as test_long_f_output:
     test_long_tsv_output = csv.writer(test_long_f_output, delimiter='\n')
