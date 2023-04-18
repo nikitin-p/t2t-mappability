@@ -7,7 +7,8 @@ process FINDUNMAPPABLE {
     tuple path(mul), path(mur)
 
     output:
-    path "*.bed"         , emit: bed
+    path "*_single_reads_unmappable.bed", emit: singlebed
+    path "_pair_reads_unmappable.bed", emit: pairbed
     path "versions.yml"  , emit: versions
 
     script:

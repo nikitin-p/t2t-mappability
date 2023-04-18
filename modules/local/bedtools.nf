@@ -20,15 +20,19 @@ process BEDTOOLS {
     def args = task.ext.args ?: ''
     
     """
-    samtools \\
-        sort \\
-        $args \\
-        -@ $task.cpus \\
-        $bam
+    bedtools \\
+        intersect \\
+        -wa \\
+        -u \\
+        # -c \\
+        -a censatannotation.bed \\
+        -b chr1_pair_reads_unmappable.bed > intersected.bed
+
+    bedtools intersect -wa -u -a censatannotation.bed -b chr1_pair_reads_unmappable.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bedtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//' ))
+        bedtools: \$(bedtools --version | cut -d" " -f2)
     END_VERSIONS
     """
 }

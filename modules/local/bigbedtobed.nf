@@ -8,7 +8,8 @@ process BIGBEDTOBED {
     path bigbedrmsk
 
     output:
-    path "*.bed", emit: bed
+    path "censatannotation.bed", emit: censatannot
+    path "rmskannotation.bed", emit: rmskannot
     path "versions.yml"           , emit: versions
 
     """
