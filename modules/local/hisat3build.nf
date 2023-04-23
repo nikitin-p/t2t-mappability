@@ -1,20 +1,18 @@
 process HISAT3 {
-    tag "$meta.id"
     label 'process_high'
 
     container 'nikitinpavel/hisat3_samtools_bedtools_machine:0.2'
 
     input:
     tuple path(fasta), path(fai)
-    tuple val(meta), val(srrs)
+    path fasta
 
     output:
-    tuple val(meta), path("*.bam"), emit: fastq
+    path "t2t-chm13-v1.1.fa*"       , emit: index
     path "versions.yml"             , emit: versions
     
     """
     /hisat-3n/hisat-3n ${fasta} $task.cpus
-    wget ${srrs[0]} -O ${meta.id}.fastq.gz
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
