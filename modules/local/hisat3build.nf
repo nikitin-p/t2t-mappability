@@ -1,10 +1,9 @@
-process HISAT3 {
+process HISAT3BUILD {
     label 'process_high'
 
     container 'nikitinpavel/hisat3_samtools_bedtools_machine:0.2'
 
     input:
-    tuple path(fasta), path(fai)
     path fasta
 
     output:
@@ -12,11 +11,11 @@ process HISAT3 {
     path "versions.yml"             , emit: versions
     
     """
-    /hisat-3n/hisat-3n ${fasta} $task.cpus
+    /hisat-3n/hisat-3n-build --ref ${fasta} --output-name ${fasta} --threads $task.cpus
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        HISAT-3N: \$(echo 'add later')
+        HISAT-3N: \$(/hisat-3n/hisat-3n --version | head -1 | cut -d" " -f3)
     END_VERSIONS
     """
 }

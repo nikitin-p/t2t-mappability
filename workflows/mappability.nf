@@ -9,7 +9,8 @@
 // include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
 // include { FINDUNMAPBASIC } from '../modules/local/findunmapbasic.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
-include { HISAT3 } from '../modules/local/hisat3.nf'
+include { HISAT3BUILD } from '../modules/local/hisat3build.nf'
+// include { HISAT3 } from '../modules/local/hisat3.nf'
 // include { BEDTOOLSINTERSECT } from '../modules/local/bedtoolsintersect.nf'
 
 // Use this

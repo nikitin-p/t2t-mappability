@@ -13,12 +13,13 @@ process HISAT3 {
     path "versions.yml"             , emit: versions
     
     """
-    /hisat-3n/hisat-3n ${fasta} $task.cpus
-    wget ${srrs[0]} -O ${meta.id}.fastq.gz
+    /hisat-3n/hisat-3n -x ${fasta} --threads $task.cpus
+    wget ${srrs[0]} -O ${meta.id}.fastq.gz --repeat-limit 1000
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        HISAT-3N: \$(echo 'add later')
+        HISAT-3N: \$(/hisat-3n/hisat-3n --version | head -1 | cut -d" " -f3)
+        samtools: \$(/samtools-1.14/samtools --version | head -1 | cut -d" " -f2)
     END_VERSIONS
     """
 }
