@@ -1,5 +1,5 @@
-// include { DOWNLOADREADSSE } from '../modules/local/downloadreadsse.nf'
-// include { DOWNLOADREADSPE } from '../modules/local/downloadreadspe.nf'
+include { DOWNLOADREADSSE } from '../modules/local/downloadreadsse.nf'
+include { DOWNLOADREADSPE } from '../modules/local/downloadreadspe.nf'
 // include { GETMINREADLENGTH } from '../modules/local/getminreadlength.nf'
 // include { DOWNLOADANNOTATION } from '../modules/local/downloadannotation.nf'
 // include { BIGBEDTOBED } from '../modules/local/bigbedtobed.nf'
@@ -9,7 +9,7 @@
 // include { FINDUNMAPPABLE } from '../modules/local/findunmappable.nf'
 // include { FINDUNMAPBASIC } from '../modules/local/findunmapbasic.nf'
 // include { BEDTOOLS } from '../modules/local/bedtools.nf'
-include { HISAT3BUILD } from '../modules/local/hisat3build.nf'
+// include { HISAT3BUILD } from '../modules/local/hisat3build.nf'
 // include { HISAT3 } from '../modules/local/hisat3.nf'
 // include { BEDTOOLSINTERSECT } from '../modules/local/bedtoolsintersect.nf'
 
@@ -49,118 +49,117 @@ include { HISAT3BUILD } from '../modules/local/hisat3build.nf'
 
 // Use this to specify reference genome
 
-refgenome = Channel.fromPath( "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa" )
-
+// refgenome = Channel.fromPath( "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa" )
 
 // Use this to specify SRA links
 
-srrs = [
-    [
-    [
-        id: "CHM13-pro-seq"
-    ],
-    "SRR15035503"
-    ],
-    [
-    [
-        id: "CHM13-polyA"
-    ],
-    "SRR15054302"
-    ],
-    [
-    [
-        id: "RPE1-total"
-    ],
-    "SRR11201736"
-    ],
-    [
-    [
-        id: "RPE1-pro-seq"
-    ],
-    "SRR15035501"
-    ],
-    [
-    [
-        id: "RPE1-polyA"
-    ],
-    "SRR3677550"
-    ],
-    [
-    [
-        id: "K562-total"
-    ],
-    "SRR14638227"
-    ],
-    [
-    [
-        id: "K562-pro-seq"
-    ],
-    "SRR1554311"
-    ],
-    [
-    [
-        id: "K562-polyA"
-    ],
-    "SRR3192409"
-    ]
-]
-
-// srr_se = [
+// srrs = [
 //     [
 //     [
 //         id: "CHM13-pro-seq"
 //     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/003/SRR15035503/SRR15035503.fastq.gz"
+//     "SRR15035503"
+//     ],
+//     [
+//     [
+//         id: "CHM13-polyA"
+//     ],
+//     "SRR15054302"
 //     ],
 //     [
 //     [
 //         id: "RPE1-total"
 //     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR112/036/SRR11201736/SRR11201736.fastq.gz"
+//     "SRR11201736"
 //     ],
 //     [
 //     [
 //         id: "RPE1-pro-seq"
 //     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/001/SRR15035501/SRR15035501.fastq.gz"
-//     ],
-//     [
-//     [
-//         id: "K562-total"
-//     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR146/027/SRR14638227/SRR14638227.fastq.gz"
-//     ],
-//     [
-//     [
-//         id: "K562-pro-seq"
-//     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR155/001/SRR1554311/SRR1554311.fastq.gz"
-//     ],
-// ]
-
-// srr_pe = [
-//     [
-//     [
-//         id: "CHM13-polyA"
-//     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/002/SRR15054302/SRR15054302_1.fastq.gz",
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/002/SRR15054302/SRR15054302_2.fastq.gz"
+//     "SRR15035501"
 //     ],
 //     [
 //     [
 //         id: "RPE1-polyA"
 //     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR367/000/SRR3677550/SRR3677550_1.fastq.gz",
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR367/000/SRR3677550/SRR3677550_2.fastq.gz"
+//     "SRR3677550"
+//     ],
+//     [
+//     [
+//         id: "K562-total"
+//     ],
+//     "SRR14638227"
+//     ],
+//     [
+//     [
+//         id: "K562-pro-seq"
+//     ],
+//     "SRR1554311"
 //     ],
 //     [
 //     [
 //         id: "K562-polyA"
 //     ],
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/009/SRR3192409/SRR3192409_1.fastq.gz",
-//     "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/009/SRR3192409/SRR3192409_2.fastq.gz"
+//     "SRR3192409"
 //     ]
 // ]
+
+srr_se = [
+    [
+    [
+        id: "CHM13-pro-seq"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/003/SRR15035503/SRR15035503.fastq.gz"
+    ],
+    [
+    [
+        id: "RPE1-total"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR112/036/SRR11201736/SRR11201736.fastq.gz"
+    ],
+    [
+    [
+        id: "RPE1-pro-seq"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/001/SRR15035501/SRR15035501.fastq.gz"
+    ],
+    [
+    [
+        id: "K562-total"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR146/027/SRR14638227/SRR14638227.fastq.gz"
+    ],
+    [
+    [
+        id: "K562-pro-seq"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR155/001/SRR1554311/SRR1554311.fastq.gz"
+    ],
+]
+
+srr_pe = [
+    [
+    [
+        id: "CHM13-polyA"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/002/SRR15054302/SRR15054302_1.fastq.gz",
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR150/002/SRR15054302/SRR15054302_2.fastq.gz"
+    ],
+    [
+    [
+        id: "RPE1-polyA"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR367/000/SRR3677550/SRR3677550_1.fastq.gz",
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR367/000/SRR3677550/SRR3677550_2.fastq.gz"
+    ],
+    [
+    [
+        id: "K562-polyA"
+    ],
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/009/SRR3192409/SRR3192409_1.fastq.gz",
+    "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR319/009/SRR3192409/SRR3192409_2.fastq.gz"
+    ]
+]
 
 // Channel.from ("SRR", "SRR", "SRR" ) - посмотреть как-то так
 
@@ -217,20 +216,20 @@ srrs = [
 
 // Use this to specify SRRs
 
-Channel
-    .from( srrs )
-    .map{ row -> [ row[0], [ row[1] ] ] }
-    .set{ ch_srrs }
-
 // Channel
-//     .from( srr_se )
+//     .from( srrs )
 //     .map{ row -> [ row[0], [ row[1] ] ] }
-//     .set{ ch_srr_se }
+//     .set{ ch_srrs }
 
-// Channel
-//     .from( srr_pe )
-//     .map{ row -> [ row[0], [ row[1], row[2] ] ] }
-//     .set{ ch_srr_pe }
+Channel
+    .from( srr_se )
+    .map{ row -> [ row[0], [ row[1] ] ] }
+    .set{ ch_srr_se }
+
+Channel
+    .from( srr_pe )
+    .map{ row -> [ row[0], [ row[1], row[2] ] ] }
+    .set{ ch_srr_pe }
 
 // Channel
 //     .from( wigs_full )
@@ -250,13 +249,13 @@ Channel
 // ch_wigs.view()
 
 workflow MAPPABILITY {
-    // DOWNLOADREADSSE(
-    //     ch_srr_se
-    // )
+    DOWNLOADREADSSE(
+        ch_srr_se
+    )
 
-    // DOWNLOADREADSPE(
-    //     ch_srr_pe
-    // )
+    DOWNLOADREADSPE(
+        ch_srr_pe
+    )
 
     // GETMINREADLENGTH()
 
@@ -298,9 +297,9 @@ workflow MAPPABILITY {
 
     // BEDTOOLS()
 
-    HISAT3BUILD(
-        refgenome
-    )
+    // HISAT3BUILD(
+    //     refgenome
+    // )
 
     // HISAT3(
     //     HISAT3BUILD.out.index
