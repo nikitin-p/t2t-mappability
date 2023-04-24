@@ -11,6 +11,8 @@ process HISAT3 {
     output:
     tuple val(meta), path("*.bam"), emit: fastq
     path "versions.yml"             , emit: versions
+
+    maxForks 4
     
     """
     /hisat-3n/hisat-3n -x ${fasta} --threads $task.cpus

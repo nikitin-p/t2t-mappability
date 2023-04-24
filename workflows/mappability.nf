@@ -49,7 +49,8 @@ include { HISAT3BUILD } from '../modules/local/hisat3build.nf'
 
 // Use this to specify reference genome
 
-refgenome = = Channel.fromPath( "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa" )
+refgenome = Channel.fromPath( "/home/nikitinp/hooman/map_test/t2t-chm13-v1.1.fa" )
+
 
 // Use this to specify SRA links
 
