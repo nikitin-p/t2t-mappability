@@ -11,7 +11,10 @@ process HISAT3BUILD {
     path "versions.yml"             , emit: versions
     
     """
-    /hisat-3n/hisat-3n-build --ref ${fasta} --output-name ${fasta} --threads $task.cpus
+    /hisat-3n/hisat-3n-build \
+    --ref ${fasta} \
+    --output-name ${fasta} \
+    --threads $task.cpus
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

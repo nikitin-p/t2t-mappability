@@ -15,9 +15,20 @@ process HISAT3 {
     maxForks 4
     
     """
-    /hisat-3n/hisat-3n -x ${fasta} --threads $task.cpus
-    wget ${srrs[0]} -O ${meta.id}.fastq.gz --repeat-limit 1000
+    /hisat-3n/hisat-3n -x ${fasta} \
+    --sra-acc <SRR> \
+    --threads $task.cpus \
+    --repeat-limit 1000 \
+    --no-mixed --no-discordant \
+    --summary-file <file> \
+    --met-file <file> | \
+    samtools sort \
+    -@$task.cpus \
+    -o ${meta.id}.bam -
     
+    ${srrs[0]}
+    ${meta.id}.fastq.gz
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         HISAT-3N: \$(/hisat-3n/hisat-3n --version | head -1 | cut -d" " -f3)
