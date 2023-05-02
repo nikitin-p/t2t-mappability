@@ -1,0 +1,676 @@
+---
+title: "RNA-seq T2T analysis"
+author: "Pavel Nikitin, Sviatoslav Sidorov"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Load libraries:
+
+```{r}
+library(dplyr)
+library(stringr)
+library(tibble)
+library(ggplot2)
+library(RColorBrewer)
+library(colorRamp2)
+library(circlize)
+library(ComplexHeatmap)
+stringsAsFactors = F
+```
+
+Set path to file:
+
+```{r}
+chm13.pro.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/CHM13-pro-seq_intersected.bed'
+k562.total.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-total_intersected.bed'
+k562.pro.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-pro-seq_intersected.bed'
+rpe1.pro.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-pro-seq_intersected.bed'
+rpe1.total.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-total_intersected.bed'
+rpe1.polya.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-polyA_intersected.bed'
+k562.polya.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-polyA_intersected.bed'
+chm13.polya.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/CHM13-polyA_intersected.bed'
+
+chm13.pro.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/CHM13-pro-seq_intersected_sf.bed'
+k562.total.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-total_intersected_sf.bed'
+k562.pro.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-pro-seq_intersected_sf.bed'
+rpe1.pro.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-pro-seq_intersected_sf.bed'
+rpe1.total.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-total_intersected_sf.bed'
+rpe1.polya.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/RPE1-polyA_intersected_sf.bed'
+k562.polya.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/K562-polyA_intersected_sf.bed'
+chm13.polya.sf.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/CHM13-polyA_intersected_sf.bed'
+#.path = '/Users/pavel/Desktop/PROJECTS/hooman/RNA/'
+```
+
+Upload bed files as tables:
+
+```{r}
+chm13.pro <- read.delim(chm13.pro.path, header = F,  sep="\t", stringsAsFactors = F)
+names(chm13.pro) = c("chr", "start", "end", "type", "count")
+k562.total <- read.delim(k562.total.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.total) = c("chr", "start", "end", "type", "count")
+k562.pro <- read.delim(k562.pro.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.pro) = c("chr", "start", "end", "type", "count")
+rpe1.pro <- read.delim(rpe1.pro.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.pro) = c("chr", "start", "end", "type", "count")
+rpe1.total <- read.delim(rpe1.total.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.total) = c("chr", "start", "end", "type", "count")
+rpe1.polya <- read.delim(rpe1.polya.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.polya) = c("chr", "start", "end", "type", "count")
+k562.polya <- read.delim(k562.polya.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.polya) = c("chr", "start", "end", "type", "count")
+chm13.polya <- read.delim(chm13.polya.path, header = F,  sep="\t", stringsAsFactors = F)
+names(chm13.polya) = c("chr", "start", "end", "type", "count")
+```
+
+```{r}
+chm13.pro.sf <- read.delim(chm13.pro.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(chm13.pro.sf) = c("chr", "start", "end", "type", "count")
+k562.total.sf <- read.delim(k562.total.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.total.sf) = c("chr", "start", "end", "type", "count")
+k562.pro.sf <- read.delim(k562.pro.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.pro.sf) = c("chr", "start", "end", "type", "count")
+rpe1.pro.sf <- read.delim(rpe1.pro.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.pro.sf) = c("chr", "start", "end", "type", "count")
+rpe1.total.sf <- read.delim(rpe1.total.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.total.sf) = c("chr", "start", "end", "type", "count")
+rpe1.polya.sf <- read.delim(rpe1.polya.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(rpe1.polya.sf) = c("chr", "start", "end", "type", "count")
+k562.polya.sf <- read.delim(k562.polya.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(k562.polya.sf) = c("chr", "start", "end", "type", "count")
+chm13.polya.sf <- read.delim(chm13.polya.sf.path, header = F,  sep="\t", stringsAsFactors = F)
+names(chm13.polya.sf) = c("chr", "start", "end", "type", "count")
+```
+
+Set library sizes
+```{r}
+chm13.pro.size = 4344860356
+k562.total.size = 32180980
+k562.pro.size = 73747675
+rpe1.pro.size = 20473747
+rpe1.total.size = 21885641
+rpe1.polya.size = 19380596
+k562.polya.size = 105236135
+chm13.polya.size = 78763657
+```
+
+```{r}
+groups <- sort(c("bsat",
+            "censat_5S",
+            "censat_ACRO",
+            "censat_AGCCAAGCCn",
+            "censat_AluSx-CCAAGCCAGn",
+            "censat_AluSx-GCTGGCTTGn",
+            "censat_ATATATTn",
+            "censat_ATGAAn",
+            "censat_CATCTn",
+            "censat_CCAAGCCAGn",
+            "censat_CCCTGGn,ATGAAn",
+            "censat_CCTGGCn",
+            "censat_CER",
+            "censat_CTCn,TATAn",
+            "censat_CTGGCCn",
+            "censat_CTTCn",
+            "censat_D20S16",
+            "censat_GATAn",
+            "censat_GATGATn",
+            "censat_GCCAAGCCAn,A-rich",
+            "censat_L1PA12",
+            "censat_LSAU",
+            "censat_MER5A1",
+            "censat_NovelTandem",
+            "censat_rnd-1",
+            "censat_rnd-6",
+            "censat_SATR",
+            "censat_SST",
+            "censat_TCATTn",
+            "censat_TCTAn",
+            "censat_TGATGAn",
+            "censat_TGGCCCn$",
+            "censat_TGGCCCn,A-rich",
+            "censat_TGGCTTGGCn",
+            "censat_ULTRA-novelSat",
+            "ct",
+            "dhor_S01",
+            "dhor_S02",
+            "dhor_S1",
+            "dhor_S2",
+            "dhor_S3",
+            "dhor_S5",
+            "dhor_SF01",
+            "dhor_SF02",
+            "dhor_SF1",
+            "dhor_SF2",
+            "dhor_SF3",
+            "dhor_SF5",
+            "gsat_GSAT$",
+            "gsat_GSATII",
+            "gsat_GSATX",
+            "gsat_TAR",
+            "hor_S01",
+            "hor_S02",
+            "hor_S1",
+            "hor_S2",
+            "hor_S3",
+            "hor_S4",
+            "hor_S5",
+            "hor_S6",
+            "hsat1",
+            "hsat2",
+            "hsat3",
+            "hsat4",
+            "hsat5",
+            "mon",
+            "rDNA",
+            "tar"))
+drop = c("dhor_SF02,SF2",
+         "dhor_SF2,SF02",
+         "gsat_GSATII,rnd-6-family-1431",
+         "gsat_GSATX;GSATII",
+         "hor_S01/1C3H1L",
+         "hor_S4/6C13/14/21H1",
+         "censat_TGGCCCn,ATGAAn")
+```
+
+Test blocks
+
+```{r}
+chm13.pro.test = chm13.pro %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+```
+
+```{r}
+c(setdiff(chm13.pro.test$type_common, groups), setdiff(groups, chm13.pro.test$type_common))
+```
+
+```{r}
+#chm13.pro$type <- as.factor(chm13.pro$type)
+chm13.pro.test = chm13.pro %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  # summarise(s_count=sum(count),
+  #           s_length= sum(length),
+  #           .groups = 'drop') %>%
+  # filter(!type %in% drop) %>%
+  # filter(!grepl('dhor_SF02,SF2|dhor_SF2,SF02|gsat_GSATII,rnd-6-family-1431|gsat_GSATX;GSATII|hor_S01/1C3H1L|hor_S4/6C13/14/21H1|censat_TGGCCCn,ATGAAn', type)) %>%
+  group_by(type = str_extract(type, paste(groups, collapse="|"))) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') # %>%
+  # mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.pro.size * sum_length)) %>%
+# mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+# sum(chm13.pro$tpm)
+```
+
+```{r}
+c(setdiff(chm13.pro.test$type, groups), setdiff(groups, chm13.pro.test$type))
+```
+
+Make all tables cenSat
+
+```{r}
+chm13.pro = chm13.pro %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.total = k562.total %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.total.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.pro = k562.pro %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.pro = rpe1.pro %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.total = rpe1.total %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.total.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.polya = rpe1.polya %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.polya = k562.polya %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+chm13.polya = chm13.polya %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  filter(!type %in% drop) %>%
+  mutate(type_common = str_extract(type, paste(groups, collapse="|"))) %>%
+  group_by(type_common) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+
+```
+
+```{r}
+sum(chm13.pro$tpm)
+sum(k562.total$tpm)
+sum(k562.pro$tpm)
+sum(rpe1.pro$tpm)
+sum(rpe1.total$tpm)
+sum(rpe1.polya$tpm)
+sum(k562.polya$tpm)
+sum(chm13.polya$tpm)
+```
+
+Make all tables SF
+
+```{r}
+chm13.pro.sf = chm13.pro.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.total.sf = k562.total.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.total.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.pro.sf = k562.pro.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.pro.sf = rpe1.pro.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.pro.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.total.sf = rpe1.total.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.total.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+rpe1.polya.sf = rpe1.polya.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (rpe1.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+k562.polya.sf = k562.polya.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (k562.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+chm13.polya.sf = chm13.polya.sf %>%
+  mutate(length = end - start) %>%
+  arrange(type) %>%
+  group_by(type) %>%
+  summarise(sum_count=sum(count),
+            sum_length= sum(length),
+            .groups = 'drop') %>%
+  mutate(rpkm = (sum_count * 1000 * 1000000) / (chm13.polya.size * sum_length)) %>%
+  mutate(tpm = (rpkm / sum(rpkm) * 1000000))
+```
+
+```{r}
+sum(chm13.pro.sf$tpm)
+sum(k562.total.sf$tpm)
+sum(k562.pro.sf$tpm)
+sum(rpe1.pro.sf$tpm)
+sum(rpe1.total.sf$tpm)
+sum(rpe1.polya.sf$tpm)
+sum(k562.polya.sf$tpm)
+sum(chm13.polya.sf$tpm)
+```
+
+Merge tables into one
+сначала все PRO-seq, потом все polyA, потом все total, внутри них CHM13, K562, RPE1
+Порядок вот такой:
+chm13.pro k562.pro rpe1.pro chm13.polya k562.polya rpe1.polya k562.total rpe1.total
+
+```{r}
+censat = as.data.frame(cbind(chm13.pro$type_common, chm13.pro$tpm, k562.pro$tpm, rpe1.pro$tpm, chm13.polya$tpm, k562.polya$tpm, rpe1.polya$tpm, k562.total$tpm, rpe1.total$tpm))
+colnames(censat) <- c("Type", "CHM13 PRO-seq", "K562 PRO-seq", "RPE1 PRO-seq", "CHM13 poly(A)-selected", "K562 poly(A)-selected", "RPE1 poly(A)-selected", "K562 total RNA", "RPE1 total RNA")
+m <-as.matrix(sapply(censat[,2:9], as.numeric))
+rownames(m) <- censat$Type
+```
+
+```{r}
+#png(file="heatmap_censat.png", width=2000, height=3000, res=300)
+heatmap(m, Colv = NA, Rowv = NA,
+        col = colorRampPalette(brewer.pal(8,"Blues"))(10))
+legend(x = "topright", legend = c("low", "medium", "high"),
+       cex = 0.8, fill = colorRampPalette(brewer.pal(8, "Blues"))(3))
+#dev.off()
+#, Colv = NA, Rowv = NA,
+#, row_names_side = "left", column_names_side = "top",
+```
+
+```{r}
+col_fun = colorRamp2(c(min(m), 0, max(m)), c("#ffffff", "#673ab7", "#522e93"))
+Heatmap(m, row_names_side = "left", column_names_side = "bottom", row_dend_side = "right", col = col_fun, cluster_columns = FALSE)
+```
+
+```{r}
+logm = log10(m+1)
+logm = logm[rowSums(logm[])>0,]
+# logm = na.omit(logm)
+tlogm = t(logm)
+zlogm = scale(tlogm)
+tzlogm = t(zlogm)
+# tzlogm <- na.omit(tzlogm)
+# tzlogm[is.nan(tzlogm)] <- 0
+# zlogm <- na.omit(zlogm)
+# zlogm[is.nan(zlogm)] <- 0
+```
+
+zi = 2 * ((xi – xmin) / (xmax – xmin)) – 1
+
+```{r}
+# by(dataFrame, seq_len(nrow(dataFrame)), function(row) dostuff)
+
+scale.to.one <- function(matr) {
+  # temp = matrix(1, nrow = dim(matr)[1], ncol = dim(matr)[2])
+  # vec = c()
+  for (i in 1:nrow(matr)) {
+    row = matr[i,]
+    a = min(row)
+    b = max(row)
+    for (j in row) {
+      j = 2 * ((j - a) / (b - a - 1))
+    }
+    # 
+    # row[-c(which.max(row), which.min(row))] = -(a-b)/(b-a-2)
+    # row[max(row)] = 1
+    # row[min(row)] = -1
+    # vec = c(vec, row)
+  }
+  # return(vec)
+}
+
+test = tzlogm
+scale.to.one(test)
+```
+matrix(1, nrow = 10, ncol = 8)
+
+```{r}
+by(test, seq_len(nrow(test)), function(row) {
+  a = min(row)
+  b = max(row)
+  for (j in length(row)) {
+    row[j] = 2 * ((row[j] - a) / (b - a - 1))
+    }
+})
+
+scale.to.one <- function(matr) {
+  for (i in 1:nrow(matr)) {
+    row = matr[i,]
+    a = min(row)
+    b = max(row)
+    for (j in row) {
+      j = 2 * ((j - a) / (b - a - 1))
+    }
+  }
+}
+
+test = tzlogm
+scale.to.one(test)
+```
+
+```{r}
+# col_fun = colorRamp2(c(0, max(zlogm)/2, max(zlogm)), c("#ffffff", "#673ab7", "#522e93"))
+# col_fun = colorRamp2(c(min(tzlogm), 0, max(tzlogm)), c("#ffffff", "#673ab7", "#522e93"))
+#col_fun = colorRamp2(c(0, max(m)/2, max(m)), c("#f1d6ff", "#9d4edd", "#10002b"))
+Heatmap(zlogm, row_names_side = "left", column_names_side = "bottom", row_dend_side = "right")
+# , cluster_columns = FALSE
+# , col = col_fun
+```
+
+```{r}
+# col_fun = colorRamp2(c(0, max(zlogm)/2, max(zlogm)), c("#ffffff", "#673ab7", "#522e93"))
+# col_fun = colorRamp2(c(min(tzlogm), 0, max(tzlogm)), c("#ffffff", "#673ab7", "#522e93"))
+#col_fun = colorRamp2(c(0, max(m)/2, max(m)), c("#f1d6ff", "#9d4edd", "#10002b"))
+fig1b = Heatmap(tzlogm, column_names_rot = 45, row_names_side = "left", column_names_side = "bottom", row_dend_side = "right", cluster_columns = FALSE)
+# , cluster_columns = FALSE
+# , col = col_fun
+fig1b
+```
+
+```{r}
+row_order(fig1b)
+```
+
+```{r}
+pdf(file="/Users/pavel/Desktop/PROJECTS/hooman/RNA/fig1b.pdf",
+    width=6,
+    height=12)
+draw(fig1b)
+dev.off()
+```
+
+       
+```{r}
+# col_fun = colorRamp2(c(0, max(zlogm)/2, max(zlogm)), c("#ffffff", "#673ab7", "#522e93"))
+col_fun = colorRamp2(c(min(logm), 0, max(logm)), c("#ffffff", "#673ab7", "#522e93"))
+#col_fun = colorRamp2(c(0, max(m)/2, max(m)), c("#f1d6ff", "#9d4edd", "#10002b"))
+fig1a = Heatmap(logm, column_names_rot = 45, row_names_side = "left", column_names_side = "bottom", row_dend_side = "right", col = col_fun, cluster_columns = FALSE, cluster_rows = FALSE, row_order = row_order(fig1b))
+# , cluster_columns = FALSE
+fig1a
+```
+```{r}
+pdf(file="/Users/pavel/Desktop/PROJECTS/hooman/RNA/fig1a.pdf",
+    width=6,
+    height=12)
+draw(fig1a)
+dev.off()
+```
+
+```{r}
+heatmap(m, Colv = NA, Rowv = NA, row_names_side = "left", column_names_side = "top",
+        col = colorRampPalette(brewer.pal(8,"RdYlGn"))(3))
+legend(x = "topright", legend = c("low", "medium", "high"),
+       cex = 0.8, fill = colorRampPalette(brewer.pal(8, "RdYlGn"))(3))
+```
+
+```{r}
+sf = as.data.frame(cbind(chm13.pro.sf$type, chm13.pro.sf$tpm, k562.pro.sf$tpm, rpe1.pro.sf$tpm, chm13.polya.sf$tpm, k562.polya.sf$tpm, rpe1.polya.sf$tpm, k562.total.sf$tpm, rpe1.total.sf$tpm))
+colnames(sf) <- c("Type", "CHM13.PRO.seq", "K562.PRO.seq", "RPE1.PRO.seq", "CHM13.polyA.selected", "K562.polyA.selected", "RPE1.polyA.selected", "K562.total.RNA", "RPE1.total.RNA")
+sf = sf %>%
+  mutate(sf = case_when(
+  Type %in% c("Pa", "Ta") ~ "SF18",
+  Type == "Qa" ~ "SF17",
+  Type == "Ea" ~ "SF16",
+  Type == "Fa" ~ "SF15",
+  Type == "La" ~ "SF14",
+  Type == "Ia" ~ "SF13",
+  Type == "Aa" ~ "SF12",
+  Type == "Ja" ~ "SF11",
+  Type == "Ba" ~ "SF10",
+  Type == "Ca" ~ "SF9",
+  Type %in% c("Oa", "Na") ~ "SF8",
+  Type == "Ka" ~ "SF7",
+  Type == "Ha" ~ "SF6",
+  Type == "Ga" ~ "SF4",
+  Type %in% c("R1", "R2") ~ "SF5",
+  Type %in% c("W1", "W2", "W3", "W4", "W5") ~ "SF3",
+  Type %in% c("D3", "D4", "D5", "D6", "D7", "D8", "D9") ~ "SF02",
+  Type %in% c("D1", "D2", "FD") ~ "SF2",
+  Type %in% c("J3", "J4", "J5", "J6") ~ "SF01",
+  Type %in% c("J1", "J2") ~ "SF1"
+)) %>%
+  mutate(sf = factor(sf, levels = c("SF1", "SF01", "SF2", "SF02", "SF3", "SF5", "SF4", "SF6", "SF7", "SF8", "SF9", "SF10", "SF11", "SF12", "SF13", "SF14", "SF15", "SF16", "SF17", "SF18"))) %>%
+  arrange(sf) %>%
+  dplyr::select(-Type) %>%
+  mutate(across(CHM13.PRO.seq:RPE1.total.RNA, as.numeric)) %>%
+  #column_to_rownames(var = "sf")
+  # as.numeric() #%>%
+  group_by(sf) %>%
+  summarise(across(CHM13.PRO.seq:RPE1.total.RNA, sum))
+  # summarise("CHM13.PRO.seq.sum" = sum(CHM13.PRO.seq),
+  #           "K562.PRO.seq.sum" = sum(K562.PRO.seq),
+  #           "RPE1.PRO.seq.sum" = sum(RPE1.PRO.seq),
+  #           "CHM13.polyA.selected.sum" = sum(CHM13.polyA.selected),
+  #           "K562.polyA.selected.sum" = sum(K562.polyA.selected),
+  #           "RPE1.polyA.selected.sum" = sum(RPE1.polyA.selected),
+  #           "K562.total.RNA.sum" = sum(K562.total.RNA),
+  #           "RPE1.total.RNA.sum" = sum(RPE1.total.RNA))
+
+msf <-as.matrix(sapply(sf[,2:9], as.numeric))
+rownames(msf) <- sf$sf
+```
+
+```{r}
+# logmsf = log10(msf+1)
+# tlogmsf = t(logmsf)
+# zlogmsf = scale(logmsf)
+# #tzlogmsf = t(zlogmsf)
+# # tzlogmsf[is.nan(tzlogmsf)] <- 0
+# zlogmsf[is.nan(zlogmsf)] <- 0
+```
+
+```{r}
+heatmap(msf, Colv = NA, Rowv = NA,
+        col = colorRampPalette(brewer.pal(8,"Blues"))(10))
+legend(x = "topright", legend = c("low", "medium", "high"),
+       cex = 0.8, fill = colorRampPalette(brewer.pal(8, "Blues"))(3))
+```
+
+```{r}
+logmsf = log(msf + 1)
+logmsf = logmsf[rowSums(logmsf[])>0,]
+zlogmsf = scale(logmsf)
+```
+
+```{r}
+# col_fun = colorRamp2(c(0, max(msf)/2, max(msf)), c("#ffffff", "#673ab7", "#522e93"))
+col_fun = colorRamp2(c(min(zlogmsf), 0, max(zlogmsf)), c("#ffffff", "#673ab7", "#522e93"))
+fig2b = Heatmap(zlogmsf, column_names_rot = 45, row_names_side = "left", column_names_side = "bottom",  cluster_rows = FALSE, cluster_columns = FALSE)
+fig2b
+# , cluster_columns = FALSE
+# , col = col_fun
+```
+```{r}
+pdf(file="/Users/pavel/Desktop/PROJECTS/hooman/RNA/fig2b.pdf",
+    width=6,
+    height=12)
+draw(fig2b)
+dev.off()
+```
+
+```{r}
+# col_fun = colorRamp2(c(0, max(msf)/2, max(msf)), c("#ffffff", "#673ab7", "#522e93"))
+col_fun = colorRamp2(c(min(logmsf), 0, max(logmsf)), c("#ffffff", "#673ab7", "#522e93"))
+fig2a = Heatmap(logmsf, column_names_rot = 45, row_names_side = "left", column_names_side = "bottom",  cluster_rows = FALSE, col = col_fun, cluster_columns = FALSE)
+# , cluster_columns = FALSE
+fig2a
+```
+
+```{r}
+pdf(file="/Users/pavel/Desktop/PROJECTS/hooman/RNA/fig2a.pdf",
+    width=6,
+    height=12)
+draw(fig2a)
+dev.off()
+```
+
+```{r}
+# col_fun = colorRamp2(c(0, max(msf)/2, max(msf)), c("#ffffff", "#673ab7", "#522e93"))
+col_fun = colorRamp2(c(min(msf), 0, max(msf)), c("#ffffff", "#673ab7", "#522e93"))
+Heatmap(msf, row_names_side = "left", column_names_side = "bottom", cluster_columns = FALSE,  cluster_rows = FALSE, col = col_fun)
+# , cluster_columns = FALSE
+```
+
+```{r}
+
+```
+
+```{r}
+
+```

@@ -1,0 +1,199 @@
+#!/usr/bin/env bash
+#HISAT-3N
+./hisat-3n/hisat-3n-build t2t-chm13-v1.1.fa t2t-chm13-v1.1 --threads 30
+
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/CHM13-pro-seq.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file CHM13-pro-seq_sum_file.txt --met-file CHM13-pro-seq_met_file.txt | samtools sort -@30 -o CHM13-pro-seq.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-pro-seq.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file RPE1-pro-seq_sum_file.txt --met-file RPE1-pro-seq_met_file.txt | samtools sort -@30 -o RPE1-pro-seq.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-pro-seq.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file K562-pro-seq_sum_file.txt --met-file K562-pro-seq_met_file.txt | samtools sort -@30 -o K562-pro-seq.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-total.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file RPE1-total_sum_file.txt --met-file RPE1-total_met_file.txt | samtools sort -@30 -o RPE1-total.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-total.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file K562-total_sum_file.txt --met-file K562-total_met_file.txt | samtools sort -@30 -o K562-total.bam -
+
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/CHM13-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/CHM13-polyA_2.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file CHM13-polyA_sum_file.txt --met-file CHM13-polyA_met_file.txt | samtools sort -@30 -o CHM13-polyA.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/RPE1-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/RPE1-polyA_2.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file RPE1-polyA_sum_file.txt --met-file RPE1-polyA_met_file.txt | samtools sort -@30 -o RPE1-polyA.bam -
+./hisat-3n/hisat-3n -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/K562-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/K562-polyA_2.fastq.gz --threads 30 --repeat-limit 1000 --no-mixed --no-discordant --summary-file K562-polyA_sum_file.txt --met-file K562-polyA_met_file.txt | samtools sort -@30 -o K562-polyA.bam -
+
+HISAT-2
+hisat2-build t2t-chm13-v1.1.fa t2t-chm13-v1.1 --threads 30
+
+-k 5 or -k 10-20-30-50
+
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/CHM13-pro-seq.fastq.gz --threads 30 -k 10 --summary-file CHM13-pro-seq_sum_file.txt --met-file CHM13-pro-seq_met_file.txt | samtools sort -@30 -o CHM13-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-pro-seq.fastq.gz --threads 30 -k 10 --summary-file RPE1-pro-seq_sum_file.txt --met-file RPE1-pro-seq_met_file.txt | samtools sort -@30 -o RPE1-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-pro-seq.fastq.gz --threads 30 -k 10 --summary-file K562-pro-seq_sum_file.txt --met-file K562-pro-seq_met_file.txt | samtools sort -@30 -o K562-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-total.fastq.gz --threads 30 -k 10 --summary-file RPE1-total_sum_file.txt --met-file RPE1-total_met_file.txt | samtools sort -@30 -o RPE1-total.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-total.fastq.gz --threads 30 -k 10 --summary-file K562-total_sum_file.txt --met-file K562-total_met_file.txt | samtools sort -@30 -o K562-total.bam -
+
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/CHM13-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/CHM13-polyA_2.fastq.gz --threads 30 -k 10 --no-mixed --no-discordant --summary-file CHM13-polyA_sum_file.txt --met-file CHM13-polyA_met_file.txt | samtools sort -@30 -o CHM13-polyA.bam -
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/RPE1-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/RPE1-polyA_2.fastq.gz --threads 30 -k 10 --no-mixed --no-discordant --summary-file RPE1-polyA_sum_file.txt --met-file RPE1-polyA_met_file.txt | samtools sort -@30 -o RPE1-polyA.bam -
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/K562-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/K562-polyA_2.fastq.gz --threads 30 -k 10 --no-mixed --no-discordant --summary-file K562-polyA_sum_file.txt --met-file K562-polyA_met_file.txt | samtools sort -@30 -o K562-polyA.bam -
+
+# Results
+
+CHM13-pro-seq.bam
+    177341239 reads; of these:
+    177341239 (100.00%) were unpaired; of these:
+    133819933 (75.46%) aligned 0 times
+    31425065 (17.72%) aligned exactly 1 time
+    12096241 (6.82%) aligned >1 times
+    24.54% overall alignment rate
+RPE1-pro-seq.bam
+    66473206 reads; of these:
+    66473206 (100.00%) were unpaired; of these:
+    45957743 (69.14%) aligned 0 times
+    16624208 (25.01%) aligned exactly 1 time
+    3891255 (5.85%) aligned >1 times
+    30.86% overall alignment rate
+K562-pro-seq.bam
+    250501612 reads; of these:
+    250501612 (100.00%) were unpaired; of these:
+    176657724 (70.52%) aligned 0 times
+    66109465 (26.39%) aligned exactly 1 time
+    7734423 (3.09%) aligned >1 times
+    29.48% overall alignment rate
+RPE1-total.bam
+    22169409 reads; of these:
+     22169409 (100.00%) were unpaired; of these:
+    273124 (1.23%) aligned 0 times
+    20419750 (92.11%) aligned exactly 1 time
+    1476535 (6.66%) aligned >1 times
+    98.77% overall alignment rate
+K562-total.bam
+    33393151 reads; of these:
+    33393151 (100.00%) were unpaired; of these:
+    1170794 (3.51%) aligned 0 times
+    23493948 (70.36%) aligned exactly 1 time
+    8728409 (26.14%) aligned >1 times
+    96.49% overall alignment rate
+CHM13-polyA.bam
+    90930105 reads; of these:
+    90930105 (100.00%) were paired; of these:
+    12067713 (13.27%) aligned concordantly 0 times
+    53124652 (58.42%) aligned concordantly exactly 1 time
+    25737740 (28.30%) aligned concordantly >1 times
+    86.73% overall alignment rate
+RPE1-polyA.bam
+    21245994 reads; of these:
+    21245994 (100.00%) were paired; of these:
+    1849035 (8.70%) aligned concordantly 0 times
+    17327668 (81.56%) aligned concordantly exactly 1 time
+    2069291 (9.74%) aligned concordantly >1 times
+    91.30% overall alignment rate
+K562-polyA.bam
+    113327735 reads; of these:
+    113327735 (100.00%) were paired; of these:
+    7891351 (6.96%) aligned concordantly 0 times
+    92833011 (81.92%) aligned concordantly exactly 1 time
+    12603373 (11.12%) aligned concordantly >1 times
+    93.04% overall alignment rate
+
+bedtools intersect -wa -u -a censatannotation.bed -b CHM13-pro-seq.bam > CHM13-pro-seq_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b K562-total.bam > K562-total_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b K562-pro-seq.bam > K562-pro-seq_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b RPE1-pro-seq.bam > RPE1-pro-seq_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b RPE1-total.bam > RPE1-total_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b RPE1-polyA.bam > RPE1-polyA_intersected.bed
+bedtools intersect -wa -u -a censatannotation.bed -b K562-polyA.bam > K562-polyA_intersected.bed
+//retry
+bedtools intersect -wa -u -a censatannotation.bed -b CHM13-polyA.bam > CHM13-polyA_intersected.bed
+// -c
+
+awk '{print $4}' CHM13-pro-seq_intersected.bed | sort | uniq > CHM13-pro-seq.tsv
+awk '{print $4}' K562-total_intersected.bed | sort | uniq > K562-total.tsv
+awk '{print $4}' K562-pro-seq_intersected.bed | sort | uniq > K562-pro-seq.tsv
+awk '{print $4}' RPE1-pro-seq_intersected.bed | sort | uniq > RPE1-pro-seq.tsv
+awk '{print $4}' RPE1-total_intersected.bed | sort | uniq > RPE1-total.tsv
+awk '{print $4}' RPE1-polyA_intersected.bed | sort | uniq > RPE1-polyA.tsv
+awk '{print $4}' K562-polyA_intersected.bed | sort | uniq > K562-polyA.tsv
+
+bedtools bamtobed -i CHM13-polyA.bam > CHM13-polyA_covered.bed
+bedtools merge -i CHM13-polyA_covered.bed > CHM13-polyA_covered_merged.bed
+bedtools intersect -wa -u -a censatannotation.bed -b CHM13-polyA_covered_merged.bed > CHM13-polyA_intersected.bed
+awk '{print $4}' CHM13-polyA_intersected.bed | sort | uniq > CHM13-polyA.tsv
+
+
+
+
+// New iteration
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/CHM13-pro-seq.fastq.gz --threads 40 -k 1 --summary-file CHM13-pro-seq_sum_file.txt --met-file CHM13-pro-seq_met_file.txt | samtools sort -@40 -o CHM13-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-pro-seq.fastq.gz --threads 40 -k 1 --summary-file RPE1-pro-seq_sum_file.txt --met-file RPE1-pro-seq_met_file.txt | samtools sort -@40 -o RPE1-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-pro-seq.fastq.gz --threads 40 -k 1 --summary-file K562-pro-seq_sum_file.txt --met-file K562-pro-seq_met_file.txt | samtools sort -@40 -o K562-pro-seq.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/RPE1-total.fastq.gz --threads 40 -k 1 --summary-file RPE1-total_sum_file.txt --met-file RPE1-total_met_file.txt | samtools sort -@40 -o RPE1-total.bam -
+hisat2 -x t2t-chm13-v1.1 -U ../t2t/results/downloadreadsse/K562-total.fastq.gz --threads 40 -k 1 --summary-file K562-total_sum_file.txt --met-file K562-total_met_file.txt | samtools sort -@40 -o K562-total.bam -
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/CHM13-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/CHM13-polyA_2.fastq.gz --threads 40 -k 1 --no-mixed --no-discordant --summary-file CHM13-polyA_sum_file.txt --met-file CHM13-polyA_met_file.txt | samtools sort -@40 -o CHM13-polyA.bam -
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/RPE1-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/RPE1-polyA_2.fastq.gz --threads 40 -k 1 --no-mixed --no-discordant --summary-file RPE1-polyA_sum_file.txt --met-file RPE1-polyA_met_file.txt | samtools sort -@40 -o RPE1-polyA.bam -
+hisat2 -x t2t-chm13-v1.1 -1 ../t2t/results/downloadreadspe/K562-polyA_1.fastq.gz -2 ../t2t/results/downloadreadspe/K562-polyA_2.fastq.gz --threads 40 -k 1 --no-mixed --no-discordant --summary-file K562-polyA_sum_file.txt --met-file K562-polyA_met_file.txt | samtools sort -@40 -o K562-polyA.bam -
+
+CHM13-pro-seq.bam
+    177341239 reads; of these:
+    177341239 (100.00%) were unpaired; of these:
+    133884565 (75.50%) aligned 0 times
+    43456674 (24.50%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+    24.50% overall alignment rate
+RPE1-pro-seq.bam
+    66473206 reads; of these:
+    66473206 (100.00%) were unpaired; of these:
+    46001115 (69.20%) aligned 0 times
+    20472091 (30.80%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+    30.80% overall alignment rate
+K562-pro-seq.bam
+    250501612 reads; of these:
+    250501612 (100.00%) were unpaired; of these:
+    176744181 (70.56%) aligned 0 times
+    73757431 (29.44%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+    29.44% overall alignment rate
+RPE1-total.bam
+    22169409 reads; of these:
+    22169409 (100.00%) were unpaired; of these:
+    284771 (1.28%) aligned 0 times
+    21884638 (98.72%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+    98.72% overall alignment rate
+K562-total.bam
+    33393151 reads; of these:
+    33393151 (100.00%) were unpaired; of these:
+    1211651 (3.63%) aligned 0 times
+    32181500 (96.37%) aligned exactly 1 time
+    0 (0.00%) aligned >1 times
+    96.37% overall alignment rate
+CHM13-polyA.bam
+    90930105 reads; of these:
+    90930105 (100.00%) were paired; of these:
+    12168115 (13.38%) aligned concordantly 0 times
+    78761990 (86.62%) aligned concordantly exactly 1 time
+    0 (0.00%) aligned concordantly >1 times
+    86.62% overall alignment rate
+RPE1-polyA.bam
+    21245994 reads; of these:
+    21245994 (100.00%) were paired; of these:
+    1866248 (8.78%) aligned concordantly 0 times
+    19379746 (91.22%) aligned concordantly exactly 1 time
+    0 (0.00%) aligned concordantly >1 times
+    91.22% overall alignment rate
+K562-polyA.bam
+    113327735 reads; of these:
+    113327735 (100.00%) were paired; of these:
+    8088335 (7.14%) aligned concordantly 0 times
+    105239400 (92.86%) aligned concordantly exactly 1 time
+    0 (0.00%) aligned concordantly >1 times
+    92.86% overall alignment rate
+
+bedtools intersect -c -wa -a censatannotation.bed -b CHM13-pro-seq.bam > CHM13-pro-seq_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b K562-total.bam > K562-total_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b K562-pro-seq.bam > K562-pro-seq_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b RPE1-pro-seq.bam > RPE1-pro-seq_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b RPE1-total.bam > RPE1-total_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b RPE1-polyA.bam > RPE1-polyA_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b K562-polyA.bam > K562-polyA_intersected.bed
+bedtools intersect -c -wa -a censatannotation.bed -b CHM13-polyA.bam > CHM13-polyA_intersected.bed
+
+bedtools intersect -c -wa -a ASat_sfs.bed -b CHM13-pro-seq.bam > CHM13-pro-seq_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b K562-total.bam > K562-total_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b K562-pro-seq.bam > K562-pro-seq_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b RPE1-pro-seq.bam > RPE1-pro-seq_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b RPE1-total.bam > RPE1-total_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b RPE1-polyA.bam > RPE1-polyA_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b K562-polyA.bam > K562-polyA_intersected_sf.bed
+bedtools intersect -c -wa -a ASat_sfs.bed -b CHM13-polyA.bam > CHM13-polyA_intersected_sf.bed
